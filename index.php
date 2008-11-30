@@ -1,0 +1,45 @@
+<?php include_once("authenticate.php"); ?>
+<html>
+<head>
+<title><?php echo SITE_NAME; ?></title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="swfobject.js"></script>
+<?php if(eregi("MSIE",$_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<script language="JavaScript" src="ieadditions.js"></script>
+<?php } ?>
+<script language="JavaScript" src="musicajax.js"></script>
+</head>
+<body onLoad="initPlayers();">
+<div id="mainBox">
+
+<div id="header">
+<?php echo SITE_NAME.'<font id="subheader">'.SITE_BETA.'</font>'; ?>
+</div>
+
+<!-- <p><b><i>Check out the <a href="desktop">desktop player</a>!</i></b></p> -->
+
+<p>Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <img height="16" width="16" src="loading.gif" id="loading"></p>
+
+<div id="listings"></div>
+
+<table id="instructions" colspacing="0" colpadding="0" border="0" width="100%"><tr>
+<td align="left"><img src="download.gif" width="10" height="10">=Add to Download Basket<br><img src="remove.gif" width="10" height="10">=Remove from Download Basket</td>
+<td align="center"><span id="flashplayer"></span><iframe id="iframe" frameborder="0" scrolling="no" width="0" height="0"></iframe></td>
+<td align="right"><a href="javascript:addEntireList();">Add Entire List to Download Basket <img border="0" src="download.gif" width="10" height="10"></a></td>
+</tr></table>
+
+<div id="downloads"></div>
+
+<span id="copyright">ZX2C4 Music is &copy; Copyright 2008 Jason A. Donenfeld. All Rights Reserved.</span>
+
+</div>
+
+<p>
+<a href="source.php">Source Code</a><br>
+<a href="statistics.php">Statistics</a><br>
+<a href="updatedatabase.php">Update Database</a><br>
+<a href="http://www.zx2c4.com">ZX2C4.COM</a>
+</p>
+
+</body>
+</html>

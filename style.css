@@ -1,0 +1,65 @@
+body
+{
+	font-family: Trebeuchet MS, Verdana, Arial;
+	text-align: center;
+	background: #eaeaea;
+}
+a
+{
+	color: blue;
+	text-decoration: none;
+}
+a:hover
+{
+	color: red;
+}
+#mainBox
+{
+	background: #ffffff;
+	border: 2px solid #999999;
+	margin: 20px auto;
+	padding: 10px;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	width:920px;
+}
+#header
+{
+	font-size: 20pt;
+	font-weight: bold;
+}
+#subheader
+{
+	font-size: 7pt;
+	vertical-align:top;
+	font-weight: bold;
+	font-style: italic;
+}
+#listingsBox
+{
+	font-size: 8pt;
+	width: 100%;
+	border-spacing: 0px;
+}
+#listings
+{
+	overflow: auto;
+	height: 400px;
+}
+#iframe
+{
+	visibility: hidden;
+}
+#downloadsBox
+{
+	font-size: 7pt;
+}
+#copyright
+{
+	font-size: 7pt;
+	color: #999999;
+}
+#instructions
+{
+	font-size: 10px;
+}
