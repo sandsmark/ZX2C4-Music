@@ -13,8 +13,10 @@ elseif($username != "" && $password != "")
 }
 if($_SESSION["loggedin"] !== true)
 {
+    session_write_close();
     header("HTTP/1.1 403 Incorrect Username and/or Password");
     include("login.php");
     exit;
 }
+session_write_close();
 ?>
