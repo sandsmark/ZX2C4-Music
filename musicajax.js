@@ -114,7 +114,7 @@ function displayResults(offset, requestedValue)
 }
 function watchScroll()
 {
-	if(!tableComplete && !requestInProgress && listings.scrollHeight - listings.clientHeight - listings.scrollTop < 30)
+	if(!tableComplete && !requestInProgress && (listings.scrollHeight - listings.clientHeight - listings.scrollTop) / listings.scrollHeight < 0.07)
 	{
 		requestInProgress = true;
 		loading.style.visibility = "visible";
