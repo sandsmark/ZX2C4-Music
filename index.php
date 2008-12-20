@@ -35,7 +35,7 @@
 </div>
 
 <p>
-<a href="source.php">Source Code</a><br>
+<a href="http://git.zx2c4.com/?p=zx2c4music.git;a=tree">Source Code</a><br>
 <a href="statistics.php">Statistics</a><br>
 <a href="updatedatabase.php">Update Database</a><br>
 <a href="http://www.zx2c4.com">ZX2C4.COM</a>
