@@ -21,12 +21,9 @@ function sendFile($path, $inline, $name, $mime, $allowPartial)
 				}
 				$length = $posto - $posfrom + 1;
 				@fseek($handle, $posfrom, SEEK_SET);
-			}
-			if($posfrom > 0 && $posto < $length - 1)
-			{
 				header('HTTP/1.1 206 Partial Content', true);
+				header('Content-Range: bytes '.$posfrom.'-'.$posto.'/'.$filelength);
 			}
-			header('Content-Range: bytes '.$posfrom.'-'.$posto.'/'.$filelength);
 			header('Accept-Ranges: bytes');
 
 		}
