@@ -40,6 +40,5 @@
 <a href="updatedatabase.php">Update Database</a><br>
 <a href="http://www.zx2c4.com">ZX2C4.COM</a>
 </p>
-<a href="javascript:alert(listings.scrollHeight - listings.clientHeight - listings.scrollTop);">asdf</a>
 </body>
 </html>
