@@ -61,7 +61,6 @@ function displayResults(offset, requestedValue)
 	if(requestObj.readyState == 4 && requestedValue == lastValue)
 	{
 		completeOffset = offset;
-		var batchSize;
 		var nextBatch = eval(requestObj.responseText);
 		if(nextBatch == null || nextBatch == undefined)
 		{
@@ -70,11 +69,9 @@ function displayResults(offset, requestedValue)
 		if(offset == 0)
 		{
 			songList = nextBatch;
-			batchSize = songList.length;
 		}
 		else
 		{
-			batchSize = nextBatch.length;
 			songList = songList.concat(nextBatch);
 		}
 		var tableData = new Array();
@@ -111,7 +108,7 @@ function displayResults(offset, requestedValue)
 			document.getElementById("listingsBox").innerHTML += tableData.join("");
 		}
 		loading.style.visibility = "hidden";
-		tableComplete = batchSize < 50;
+		tableComplete = nextBatch.length < 50;
 		requestInProgress = false;
 	}
 }
