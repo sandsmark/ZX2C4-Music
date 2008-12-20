@@ -105,7 +105,17 @@ function displayResults(offset, requestedValue)
 		}
 		else
 		{
-			document.getElementById("listingsBox").innerHTML += tableData.join("");
+			var box = document.getElementById("listingsBox");
+			if(navigator.appName == "Microsoft Internet Explorer")
+			{
+				var outer = box.outerHTML;
+				var tbody = outer.indexOf("</TBODY>");
+				box.outerHTML = outer.substring(0, tbody) + tableData.join("") + outer.substring(tbody);
+			}
+			else
+			{
+				box.innerHTML += tableData.join("");
+			}
 		}
 		loading.style.visibility = "hidden";
 		tableComplete = nextBatch.length < 50;
@@ -114,7 +124,7 @@ function displayResults(offset, requestedValue)
 }
 function watchScroll()
 {
-	if(!tableComplete && !requestInProgress && (listings.scrollHeight - listings.clientHeight - listings.scrollTop) / listings.scrollHeight < 0.07)
+	if(!tableComplete && !requestInProgress && listings.scrollHeight - listings.clientHeight - listings.scrollTop < 100)
 	{
 		requestInProgress = true;
 		loading.style.visibility = "visible";
