@@ -10,6 +10,9 @@ var downloads;
 var downloadsBox;
 var songList = null;
 var downloadBasket = new Array();
+var tableComplete = true;
+var requestInProgress = false;
+var completeOffset;
 
 if(navigator.appName == "Microsoft Internet Explorer")
 {
@@ -45,42 +48,86 @@ function filterResults()
 	{
 		return;
 	}
+	listings.scrollTop = 0;
 	lastValue = query;
 	loading.style.visibility = "visible";
-	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query);
-	requestObj.onreadystatechange = function()
-	{
-		if(requestObj.readyState == 4)
-		{
-			songList = eval(requestObj.responseText);
-			var tableData = new Array();
-			tableData.push("<table id=\"listingsBox\">");
-			for(var i = 1; i < songList.length; i++)
-			{
-				tableData.push("<tr id=\"", songList[i][0], "\"", (i % 2 == 0 ? " bgcolor=\"#EEEEEE\"" : ""), ">");
-				for(var j = 1; j < songList[i].length - 1; j++)
-				{
-					tableData.push("<td>");
-					if(j == 2)
-					{
-						tableData.push("<a href=\"javascript:playSong('", songList[i][0], "',", (songList[i][5] == "mp3").toString(), ");\">");
-					}
-					tableData.push(songList[i][j]);
-					if(j == 2)
-					{
-						tableData.push("</a>");
-					}
-					tableData.push("</td>");
-				}
-				tableData.push("<td>", getDownloadIcon(songList[i][0], (downloadBasket.indexOf(songList[i][0]) == -1)), "</td></tr>");
-			}
-			tableData.push("</table>");
-			listings.innerHTML = tableData.join("");
-			loading.style.visibility = "hidden";
-		}
-	};
+	requestInProgress = true;
+	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=50");
+	requestObj.onreadystatechange = function() { displayResults(0, lastValue); }
 	requestObj.send(null);
 }
+function displayResults(offset, requestedValue)
+{
+	if(requestObj.readyState == 4 && requestedValue == lastValue)
+	{
+		completeOffset = offset;
+		var batchSize;
+		var nextBatch = eval(requestObj.responseText);
+		if(nextBatch == null || nextBatch == undefined)
+		{
+			nextBatch = new Array();
+		}
+		if(offset == 0)
+		{
+			songList = nextBatch;
+			batchSize = songList.length;
+		}
+		else
+		{
+			batchSize = nextBatch.length;
+			songList = songList.concat(nextBatch);
+		}
+		var tableData = new Array();
+		if(offset == 0)
+		{
+			tableData.push("<table id=\"listingsBox\">");
+		}
+		for(var i = offset; i < songList.length; i++)
+		{
+			tableData.push("<tr id=\"", songList[i][0], "\"", (i % 2 != 0 ? " bgcolor=\"#EEEEEE\"" : ""), ">");
+			for(var j = 1; j < songList[i].length - 1; j++)
+			{
+				tableData.push("<td>");
+				if(j == 2)
+				{
+					tableData.push("<a href=\"javascript:playSong('", songList[i][0], "',", (songList[i][5] == "mp3").toString(), ");\">");
+				}
+				tableData.push(songList[i][j]);
+				if(j == 2)
+				{
+					tableData.push("</a>");
+				}
+				tableData.push("</td>");
+			}
+			tableData.push("<td>", getDownloadIcon(songList[i][0], (downloadBasket.indexOf(songList[i][0]) == -1)), "</td></tr>");
+		}
+		if(offset == 0)
+		{
+			tableData.push("</table>");
+			listings.innerHTML = tableData.join("");
+		}
+		else
+		{
+			document.getElementById("listingsBox").innerHTML += tableData.join("");
+		}
+		loading.style.visibility = "hidden";
+		tableComplete = batchSize < 50;
+		requestInProgress = false;
+	}
+}
+function watchScroll()
+{
+	if(!tableComplete && !requestInProgress && listings.scrollHeight - listings.clientHeight - listings.scrollTop < 30)
+	{
+		requestInProgress = true;
+		loading.style.visibility = "visible";
+		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=50&offset=" + (completeOffset + 50).toString());
+		requestObj.onreadystatechange = function() { displayResults(completeOffset + 50, lastValue); }
+		requestObj.send(null);
+	}
+	setTimeout(arguments.callee, 100);
+}
+
 function getDownloadIcon(hash, download)
 {
 	if(download)
@@ -159,7 +206,23 @@ function downloadBasketZip()
 }
 function addEntireList()
 {
-	if(songList != null && songList.length > 1)
+	if(!tableComplete)
+	{
+		requestInProgress = true;
+		loading.style.visibility = "visible";
+		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&offset=" + (completeOffset + 50).toString());
+		requestObj.onreadystatechange = function()
+		{
+			if(requestObj.readyState == 4)
+			{
+				displayResults(completeOffset + 50, lastValue);
+				tableComplete = true;
+				addEntireList();
+			}
+		}
+		requestObj.send(null);
+	}
+	else if(songList != null && songList.length > 1)
 	{
 		if(songList.length > 99)
 		{
@@ -168,7 +231,7 @@ function addEntireList()
 				return;
 			}
 		}
-		for(var i = 1; i < songList.length; i++)
+		for(var i = 0; i < songList.length; i++)
 		{
 			if(!addToBasket(songList[i][0]))
 			{
@@ -235,12 +298,12 @@ function initPlayers()
 		player = document.getElementById("flashplayer");
 		player.style.visibility = "hidden";
 	}
-
 	iframe = document.getElementById("iframe");	
 	downloads = document.getElementById("downloads");
 	listings = document.getElementById("listings");
 	loading = document.getElementById("loading");
 	filter = document.getElementById("filter");
+	watchScroll();
 	filterResults();
 	filter.focus();
 }

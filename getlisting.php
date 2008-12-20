@@ -25,12 +25,26 @@ if($_GET["query"] != "")
 	}
 	$conditions .= ")";
 }
-$result = @mysql_query("SELECT sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,album,year,disc,track,title;");
+$limiter = "";
+if(is_numeric($_GET["limit"]))
+{
+	$limiter .= " LIMIT ".intval($_GET["limit"]);
+}
+if(is_numeric($_GET["offset"]))
+{
+	if($limiter == "")
+	{
+		$limiter .= " LIMIT 18446744073709551610";
+	}
+	$limiter .= " OFFSET ".intval($_GET["offset"]);
+}
+$result = @mysql_query("SELECT sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,album,year,disc,track,title ${limiter};");
 
 $language = strtolower($_GET["language"]);
 if($language == "javascript")
 {
-	echo "[[\"sha1\",\"track\",\"title\",\"artist\",\"album\",\"format\"]";
+	echo "[";
+	$first = true;
 	while($row = @mysql_fetch_assoc($result))
 	{
 		$sha1 = htmlentities($row["sha1"]);
@@ -39,8 +53,15 @@ if($language == "javascript")
 		$artist = htmlentities($row["artist"]);
 		$album = htmlentities($row["album"]);
 		$format = htmlentities($row["format"]);
-		
-		echo ",[\"${sha1}\",\"${track}\",\"${title}\",\"${album}\",\"${artist}\",\"${format}\"]";
+		if(!$first)
+		{
+			echo ",";
+		}
+		else
+		{
+			$first = false;
+		}
+		echo "[\"${sha1}\",\"${track}\",\"${title}\",\"${album}\",\"${artist}\",\"${format}\"]";
 	}
 	echo "]";
 }
