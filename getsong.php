@@ -22,6 +22,7 @@ if($_GET["transcode"] == true)
 {
 	header('Content-Type: audio/mpeg');
 	header('Content-Transfer-Encoding: binary');
+	header('Pragma: public');
 	$command = 'ffmpeg -i '.escapeshellarg($row["file"]).' -f mp3 -y -ab 160';
 	if($row["title"] != "")
 	{
