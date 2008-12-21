@@ -52,7 +52,7 @@ if(count($files) == 0)
 }
 logDownload($rowList);
 
-if(eregi("MSIE",$_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer",$_SERVER['HTTP_USER_AGENT']))
+if(eregi("MSIE", $_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer", $_SERVER['HTTP_USER_AGENT']))
 {
 	header("Content-Type: application/octet-stream");
 }

@@ -4,7 +4,7 @@
 <title><?php echo SITE_NAME; ?></title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <script language="JavaScript" src="swfobject.js"></script>
-<?php if(eregi("MSIE",$_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer",$_SERVER['HTTP_USER_AGENT'])) { ?>
+<?php if(eregi("MSIE", $_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer", $_SERVER['HTTP_USER_AGENT'])) { ?>
 <script language="JavaScript" src="ieadditions.js"></script>
 <?php } ?>
 <script language="JavaScript" src="musicajax.js"></script>
