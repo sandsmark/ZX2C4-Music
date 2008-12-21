@@ -57,21 +57,37 @@ function getFileExtension($file)
 function getPrettyFilename($row)
 {
 	$filename = "";
-	if(strlen($row["track"]) > 0 && intval($row["track"]) > 0)
-	{
-		$filename .= $row["track"];
-	}
 	if(strlen($row["artist"]) > 0)
 	{
-		$filename .= " - ".$row["artist"];
+		$filename .= $row["artist"];
+	}
+	else
+	{
+		$filename .= "(No Artist)";
 	}
 	if(strlen($row["album"]) > 0)
 	{
 		$filename .= " - ".$row["album"];
 	}
+	if((strlen($row["track"]) > 0 && intval($row["track"]) > 0) || strlen($row["title"]) > 0)
+	{
+		$filename .= " - ";
+	}
+	if(strlen($row["track"]) > 0 && intval($row["track"]) > 0)
+	{
+		if(intval($row["track"]) < 10)
+		{
+			$filename .= "0";
+		}
+		$filename .= $row["track"];
+	}
+	if(strlen($row["track"]) > 0 && intval($row["track"]) > 0 && strlen($row["title"]) > 0)
+	{
+		$filename .= " ";
+	}
 	if(strlen($row["title"]) > 0)
 	{
-		$filename .= " - ".$row["title"];
+		$filename .= $row["title"];
 	}
 	$filename .= ".".getFileExtension($row["file"]);
 	return $filename;
