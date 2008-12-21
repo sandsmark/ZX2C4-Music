@@ -8,6 +8,7 @@ var iframe;
 var filter;
 var downloads;
 var downloadsBox;
+var counter;
 var songList = null;
 var downloadBasket = new Array();
 var tableComplete = true;
@@ -69,15 +70,28 @@ function displayResults(offset, requestedValue)
 		var nextBatch = eval(requestObj.responseText);
 		if(nextBatch == null || nextBatch == undefined)
 		{
-			nextBatch = new Array();
+			nextBatch = [0,[]];
 		}
 		if(offset == 0)
 		{
-			songList = nextBatch;
+			songList = nextBatch[1];
 		}
 		else
 		{
-			songList = songList.concat(nextBatch);
+			songList = songList.concat(nextBatch[1]);
+		}
+		tableComplete = nextBatch[0] <= songList.length;
+		if(songList.length == 0)
+		{
+			counter.innerHTML = "No songs found.";
+		}
+		else if(!tableComplete)
+		{
+			counter.innerHTML =  "Loaded " + songList.length.toString() + " of " + nextBatch[0].toString() + " songs. Scroll to the bottom for more.";
+		}
+		else
+		{
+			counter.innerHTML = "Loaded " + songList.length.toString() + " songs.";
 		}
 		var tableData = new Array();
 		if(offset == 0)
@@ -123,7 +137,6 @@ function displayResults(offset, requestedValue)
 			}
 		}
 		loading.style.visibility = "hidden";
-		tableComplete = nextBatch.length < 50;
 	}
 }
 function watchScroll()
@@ -161,9 +174,9 @@ function addToBasket(hash)
 		downloads.innerHTML = "<table align=\"center\" id=\"downloadsBox\"><tr><th align=\"center\" colspan=\"5\">Downloads Basket</th></tr><tr><th align=\"center\" colspan=\"5\"><i><a href=\"javascript:downloadBasketZip();\">Download ZIP of Basket</a> | <a href=\"javascript:emptyBasket();\">Empty Basket</a></i></th></tr></table>";	
 		downloadsBox = document.getElementById("downloadsBox").childNodes[0];
 	}
-	else if(downloadBasket.length >= 200)
+	else if(downloadBasket.length >= 100)
 	{
-		alert("You are only allowed to add 200 songs at a time to the basket.");
+		alert("You are only allowed to add 100 songs at a time to the basket.");
 		return false;
 	}
 	if(downloadBasket.indexOf(hash) != -1)
@@ -173,12 +186,9 @@ function addToBasket(hash)
 	downloadBasket.push(hash);
 	var row = document.getElementById(hash);
 	row.childNodes[4].innerHTML = getDownloadIcon(hash, false);
-	//var lastRow = downloadsBox.childNodes[downloadBasket.length];
-	//downloadsBox.removeChild(lastRow);
 	var clonedNode = row.cloneNode(true);
 	clonedNode.style.background = "#FFFFFF";
 	downloadsBox.appendChild(clonedNode);
-	//downloadsBox.appendChild(lastRow);
 	return true;
 }
 function downloadBasketZip()
@@ -237,7 +247,7 @@ function addEntireList()
 	{
 		if(songList.length > 99)
 		{
-			if(!confirm("You are about to add " + (songList.length - 1).toString() + " songs to the download basket. This may take a long time.\n\nAre you sure you want to continue?"))
+			if(!confirm("You are about to add " + songList.length.toString() + " songs to the download basket. This may take a long time.\n\nAre you sure you want to continue?"))
 			{
 				return;
 			}
@@ -256,7 +266,11 @@ function removeFromBasket(hash)
 	var index = downloadBasket.indexOf(hash);
 	downloadBasket.splice(index, 1);
 	downloadsBox.removeChild(downloadsBox.childNodes[index + 2]);
-	document.getElementById(hash).childNodes[4].innerHTML = getDownloadIcon(hash, true);
+	index = document.getElementById(hash);
+	if(index != null)
+	{
+		index.childNodes[4].innerHTML = getDownloadIcon(hash, true);
+	}
 	if(downloadBasket.length == 0)
 	{
 		downloads.innerHTML = "";
@@ -314,6 +328,7 @@ function initPlayers()
 	listings = document.getElementById("listings");
 	loading = document.getElementById("loading");
 	filter = document.getElementById("filter");
+	counter = document.getElementById("counter");
 	watchScroll();
 	filterResults();
 	filter.focus();

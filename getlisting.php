@@ -38,12 +38,15 @@ if(is_numeric($_GET["offset"]))
 	}
 	$limiter .= " OFFSET ".intval($_GET["offset"]);
 }
-$result = @mysql_query("SELECT sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,album,year,disc,track,title ${limiter};");
+$result = @mysql_query("SELECT SQL_CALC_FOUND_ROWS sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,album,year,disc,track,title ${limiter};");
+$totalResult = @mysql_query("SELECT FOUND_ROWS()");
+$totalRows = @mysql_result($totalResult, 0, 0);
+@mysql_free_result($totalResult);
 
 $language = strtolower($_GET["language"]);
 if($language == "javascript")
 {
-	echo "[";
+	echo "[$totalRows,[";
 	$first = true;
 	while($row = @mysql_fetch_assoc($result))
 	{
@@ -63,7 +66,7 @@ if($language == "javascript")
 		}
 		echo "[\"${sha1}\",\"${track}\",\"${title}\",\"${album}\",\"${artist}\",\"${format}\"]";
 	}
-	echo "]";
+	echo "]]";
 }
 elseif($language == "xml")
 {
