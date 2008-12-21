@@ -1,7 +1,6 @@
 <?php 
 include_once("databaseconnect.php");
 include_once("logger.php");
-include_once("sendfile.php");
 
 set_time_limit(0);
 
@@ -25,28 +24,10 @@ for($i = 0; $i < $_POST["count"]; $i++)
 $query = mysql_query($query);
 while($row = mysql_fetch_assoc($query))
 {
-	$filename = "";
-	if(strlen($row["track"]) > 0 && intval($row["track"]) > 0)
-	{
-		$filename .= $row["track"];
-	}
-	if(strlen($row["artist"]) > 0)
-	{
-		$filename .= " - ".$row["artist"];
-	}
-	if(strlen($row["album"]) > 0)
-	{
-		$filename .= " - ".$row["album"];
-	}
-	if(strlen($row["title"]) > 0)
-	{
-		$filename .= " - ".$row["title"];
-	}
-	$filename .= ".".getFileExtension($row["file"]);
-	$files[] = array($row["file"], $filename);
 	$rowList[] = $row;
 }
-if(count($files) == 0)
+@mysql_free_result($query);
+if(count($rowList) == 0)
 {
 	exit;
 }
@@ -64,9 +45,10 @@ header('Content-Transfer-Encoding: binary');
 header('Content-Disposition: attachment; filename="'.str_replace(" ", "", SITE_NAME)."-Download-".date("Ymd-His").".zip".'"');
 $centralDirectory = "";
 $offset = 0;
-foreach($files as $file)
+foreach($rowList as $file)
 {
-	$data = @file_get_contents($file[0]);
+	$data = @file_get_contents($file["file"]);
+	$filename = getPrettyFilename($file);
 	echo "\x50\x4b\x03\x04";	// local file header signature
 	echo "\x14\x00";		// version needed to extract
 	echo "\x00\x00";		// general purpose bit flag
@@ -78,10 +60,10 @@ foreach($files as $file)
 	$size = strlen($data);
 	echo pack('V', $size);		// compressed size
 	echo pack('V', $size);		// uncompressed size
-	$filenameLength = strlen($file[1]);
+	$filenameLength = strlen($filename);
 	echo pack('v', $filenameLength);// file name length
 	echo pack('v', 0);		// extra field length
-	echo $file[1];			// file name
+	echo $filename;			// file name
 	echo $data;			// file data
 	$centralDirectory .= "\x50\x4b\x01\x02";
 	$centralDirectory .= "\x00\x00";		// version made by
@@ -101,14 +83,14 @@ foreach($files as $file)
 	$centralDirectory .= pack('V', 32);		// external file attributes - 'archive' bit set
 	$centralDirectory .= pack('V', $offset);	// relative offset of local header
         $offset += 30 + $filenameLength + $size;
-	$centralDirectory .= $file[1];
+	$centralDirectory .= $filename;
 }
 echo $centralDirectory;		// central directory
 echo "\x50\x4b\x05\x06";	// end of central directory signature	
 echo "\x00\x00";		// number of this disk
 echo "\x00\x00";		// number of the disk with the start of the central directory
-echo pack('v', sizeof($files));	// number of entries on disk
-echo pack('v', sizeof($files));	// number of entries
+echo pack('v', sizeof($rowList)); // number of entries on disk
+echo pack('v', sizeof($rowList)); // number of entries
 echo pack('V', strlen($centralDirectory)); // size of central directory
 echo pack('V', $offset);	// offset to start of central directory
 echo "\x00\x00";		// zip comment size

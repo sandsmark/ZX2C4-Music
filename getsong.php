@@ -1,7 +1,6 @@
 <?php
 include_once("databaseconnect.php");
 include_once("logger.php");
-include_once("sendfile.php");
 
 set_time_limit(0);
 
@@ -13,7 +12,7 @@ if(!isset($_GET["hash"]))
 
 connectToDatabase();
 
-if(!($row = mysql_fetch_assoc(mysql_query("SELECT file,artist,album,title,sha1 FROM musictags WHERE sha1 = ".nullString($_GET["hash"])))))
+if(!($row = mysql_fetch_assoc(mysql_query("SELECT file,track,artist,album,title,sha1 FROM musictags WHERE sha1 = ".nullString($_GET["hash"])))))
 {
 	exit;
 }
@@ -64,6 +63,41 @@ else
 			$mime = "application/octet-stream";
 			break;
 	}
-	sendFile($row["file"], true, str_replace(",", "", substr($row["file"], strrpos($row["file"], "/") + 1)), $mime, true);
+	$handle = @fopen($row["file"], 'rb');
+	if($handle)
+	{
+		$filelength = @filesize($row["file"]);
+		$length = $filelength;
+		$posfrom = 0;
+		$posto = $length - 1;
+		if(isset($_SERVER['HTTP_RANGE']))
+		{
+			$data = explode('=',$_SERVER['HTTP_RANGE']);
+			$ppos = explode('-', trim($data[1]));
+			$posfrom = (int)trim($ppos[0]);
+			if(trim($ppos[1]) != "")
+			{
+				$posto = (int)trim($ppos[1]);
+			}
+			$length = $posto - $posfrom + 1;
+			@fseek($handle, $posfrom, SEEK_SET);
+			header('HTTP/1.1 206 Partial Content', true);
+			header('Content-Range: bytes '.$posfrom.'-'.$posto.'/'.$filelength);
+		}
+		header('Accept-Ranges: bytes');
+		header('Content-Disposition: inline; filename="'.getPrettyFilename($row).'"');
+		header('Content-Type: '.$mime);
+		header('Content-Transfer-Encoding: binary');
+		header('Pragma: public');
+		header('Content-Length: '.$length);
+		while(!feof($handle) && !connection_aborted() && $length > 0) 
+		{	
+			echo @fread($handle, min(16384, $length));
+			$length -= 16384;
+			ob_flush();	
+			flush();
+		}
+		@fclose($handle);
+	}
 }
 ?>

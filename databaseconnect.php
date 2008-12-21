@@ -54,4 +54,26 @@ function getFileExtension($file)
 {
 	return strtolower(substr($file, strrpos($file, ".") + 1));
 }
+function getPrettyFilename($row)
+{
+	$filename = "";
+	if(strlen($row["track"]) > 0 && intval($row["track"]) > 0)
+	{
+		$filename .= $row["track"];
+	}
+	if(strlen($row["artist"]) > 0)
+	{
+		$filename .= " - ".$row["artist"];
+	}
+	if(strlen($row["album"]) > 0)
+	{
+		$filename .= " - ".$row["album"];
+	}
+	if(strlen($row["title"]) > 0)
+	{
+		$filename .= " - ".$row["title"];
+	}
+	$filename .= ".".getFileExtension($row["file"]);
+	return $filename;
+}
 ?>
