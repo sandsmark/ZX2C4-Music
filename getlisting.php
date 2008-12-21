@@ -73,6 +73,7 @@ elseif($language == "xml")
 	header("Content-Type: text/xml");
 	$doc = new DOMDocument();
 	$root = $doc->createElement("songs");
+	$root->appendChild(new DOMAttr("totalsongs", $totalRows));
 	$doc->appendChild($root);
 	while($row = @mysql_fetch_assoc($result))
 	{

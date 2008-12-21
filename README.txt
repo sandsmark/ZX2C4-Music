@@ -4,7 +4,7 @@
 --Posix--
 ZX2C4 Music is written for Posix servers, like Linux or BSD.
 --PHP--
-ZX2C4 Music is written primarily in PHP, and does not use PHP 5's object oriented interfaces, so PHP 4 or 5 should work equally well. It is recommended that if you have access to your php.ini, you enable zlib output compression at the php level, instead of buffering all content at the server level, like in the case of Dreamhost. If you don't have access to your php.ini, ZX2C4 Music will still work, but you won't receive as snappy output when updating the database with new music.
+ZX2C4 Music is written in PHP5. It is recommended that if you have access to your php.ini, you enable zlib output compression at the php level, instead of buffering all content at the server level, like in the case of Dreamhost. If you don't have access to your php.ini, ZX2C4 Music will still work, but you won't receive as snappy output when updating the database with new music.
 --MySQL--
 Any MySQL compatable with the standard php libraries should work.
 --TagLib--
