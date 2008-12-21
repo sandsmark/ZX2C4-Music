@@ -141,7 +141,7 @@ function displayResults(offset, requestedValue)
 }
 function watchScroll()
 {
-	if(!tableComplete && !requestInProgress && listings.scrollHeight - listings.clientHeight - listings.scrollTop < 100)
+	if(!tableComplete && !requestInProgress && listings.scrollHeight - listings.scrollTop - listings.offsetHeight < 250)
 	{
 		requestInProgress = true;
 		loading.style.visibility = "visible";
@@ -151,7 +151,6 @@ function watchScroll()
 	}
 	setTimeout(arguments.callee, 100);
 }
-
 function getDownloadIcon(hash, download)
 {
 	if(download)

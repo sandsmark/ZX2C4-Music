@@ -8,3 +8,4 @@ rm source.php
 mv * ..
 cd ..
 rm -rf fetch
+git diff
