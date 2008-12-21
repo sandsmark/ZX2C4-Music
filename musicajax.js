@@ -58,8 +58,13 @@ function filterResults()
 }
 function displayResults(offset, requestedValue)
 {
-	if(requestObj.readyState == 4 && requestedValue == lastValue)
+	if(requestObj.readyState == 4)
 	{
+		requestInProgress = false;
+		if(requestedValue != lastValue)
+		{
+			return;
+		}
 		completeOffset = offset;
 		var nextBatch = eval(requestObj.responseText);
 		if(nextBatch == null || nextBatch == undefined)
@@ -119,7 +124,6 @@ function displayResults(offset, requestedValue)
 		}
 		loading.style.visibility = "hidden";
 		tableComplete = nextBatch.length < 50;
-		requestInProgress = false;
 	}
 }
 function watchScroll()
@@ -129,7 +133,7 @@ function watchScroll()
 		requestInProgress = true;
 		loading.style.visibility = "visible";
 		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=50&offset=" + (completeOffset + 50).toString());
-		requestObj.onreadystatechange = function() { displayResults(completeOffset + 50, lastValue); }
+		requestObj.onreadystatechange = function() { displayResults(completeOffset + 50, trimString(filter.value)); }
 		requestObj.send(null);
 	}
 	setTimeout(arguments.callee, 100);
@@ -222,7 +226,7 @@ function addEntireList()
 		{
 			if(requestObj.readyState == 4)
 			{
-				displayResults(completeOffset + 50, lastValue);
+				displayResults(completeOffset + 50, trimString(filter.value));
 				tableComplete = true;
 				addEntireList();
 			}
