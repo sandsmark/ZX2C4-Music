@@ -155,16 +155,12 @@ function getDownloadIcon(hash, download)
 {
 	if(download)
 	{
-		return "<a href=\"javascript:addToBasketLink('" + hash + "');\"><img src=\"download.gif\" width=\"12\" height=\"12\" border=\"0\"></a>";
+		return "<a href=\"javascript:addToBasket('" + hash + "');\"><img src=\"download.gif\" width=\"12\" height=\"12\" border=\"0\"></a>";
 	}
 	else
 	{
 		return "<a href=\"javascript:removeFromBasket('" + hash + "');\"><img src=\"remove.gif\" width=\"12\" height=\"12\" border=\"0\"></a>";
 	}
-}
-function addToBasketLink(hash)
-{
-	addToBasket(hash);
 }
 function addToBasket(hash)
 {
@@ -173,14 +169,9 @@ function addToBasket(hash)
 		downloads.innerHTML = "<table align=\"center\" id=\"downloadsBox\"><tr><th align=\"center\" colspan=\"5\">Downloads Basket</th></tr><tr><th align=\"center\" colspan=\"5\"><i><a href=\"javascript:downloadBasketZip();\">Download ZIP of Basket</a> | <a href=\"javascript:emptyBasket();\">Empty Basket</a></i></th></tr></table>";	
 		downloadsBox = document.getElementById("downloadsBox").childNodes[0];
 	}
-	else if(downloadBasket.length >= 100)
-	{
-		alert("You are only allowed to add 100 songs at a time to the basket.");
-		return false;
-	}
 	if(downloadBasket.indexOf(hash) != -1)
 	{
-		return true;
+		return;
 	}
 	downloadBasket.push(hash);
 	var row = document.getElementById(hash);
@@ -188,7 +179,6 @@ function addToBasket(hash)
 	var clonedNode = row.cloneNode(true);
 	clonedNode.style.background = "#FFFFFF";
 	downloadsBox.appendChild(clonedNode);
-	return true;
 }
 function downloadBasketZip()
 {
@@ -253,10 +243,7 @@ function addEntireList()
 		}
 		for(var i = 0; i < songList.length; i++)
 		{
-			if(!addToBasket(songList[i][0]))
-			{
-				return;
-			}
+			addToBasket(songList[i][0]);
 		}
 	}
 }
