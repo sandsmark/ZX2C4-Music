@@ -18,9 +18,9 @@
 
 <!-- <p><b><i>Check out the <a href="desktop">desktop player</a>!</i></b></p> -->
 
-<p>Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <img height="16" width="16" src="loading.gif" id="loading"></p>
-<div id="listings"></div>
+<div id="filterBar">Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <img height="16" width="16" src="loading.gif" id="loading"></div>
 <div id="counter"></div>
+<div id="listings"></div>
 <table id="instructions" colspacing="0" colpadding="0" border="0" width="100%"><tr>
 <td align="left"><img src="download.gif" width="10" height="10">=Add to Download Basket<br><img src="remove.gif" width="10" height="10">=Remove from Download Basket</td>
 <td align="center"><span id="flashplayer"></span><iframe id="iframe" frameborder="0" scrolling="no" width="0" height="0"></iframe></td>

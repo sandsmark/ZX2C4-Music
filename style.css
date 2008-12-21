@@ -45,6 +45,7 @@ a:hover
 {
 	overflow: auto;
 	height: 400px;
+	margin-top: 10px;
 }
 #iframe
 {
@@ -68,4 +69,8 @@ a:hover
 	text-align: center;
 	font-size: 6pt;
 	margin: 0px;
+}
+#filterBar
+{
+	margin-top: 10px;
 }
