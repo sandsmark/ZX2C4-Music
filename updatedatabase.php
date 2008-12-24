@@ -18,7 +18,6 @@ $updateCount = 0;
 $addCount = 0;
 
 setupDatabase();
-$excludeList = @explode("\n", file_get_contents("excludelist.txt"));
 deleteBadEntries();
 scanDirectory(MUSIC_DIRECTORY);
 echo $failCount." songs failed<br>".$removeCount." songs removed<br>".$updateCount." songs updated<br>".$addCount." songs added";
