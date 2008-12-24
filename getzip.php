@@ -62,7 +62,7 @@ foreach($rowList as $file)
 	echo pack('V', $size);		// uncompressed size
 	$filenameLength = strlen($filename);
 	echo pack('v', $filenameLength);// file name length
-	echo pack('v', 0);		// extra field length
+	echo "\x00\x00";		// extra field length
 	echo $filename;			// file name
 	echo $data;			// file data
 	$centralDirectory .= "\x50\x4b\x01\x02";
@@ -76,11 +76,11 @@ foreach($rowList as $file)
 	$centralDirectory .= pack('V', $size);		// compressed filesize
 	$centralDirectory .= pack('V', $size);		// uncompressed filesize
 	$centralDirectory .= pack('v', $filenameLength);// length of filename
-	$centralDirectory .= pack('v', 0);		// extra field length
-	$centralDirectory .= pack('v', 0);		// file comment length
-	$centralDirectory .= pack('v', 0);		// disk number start
-	$centralDirectory .= pack('v', 0);		// internal file attributes
-	$centralDirectory .= pack('V', 32);		// external file attributes - 'archive' bit set
+	$centralDirectory .= "\x00\x00";		// extra field length
+	$centralDirectory .= "\x00\x00";		// file comment length
+	$centralDirectory .= "\x00\x00";		// disk number start
+	$centralDirectory .= "\x00\x00";		// internal file attributes
+	$centralDirectory .= "\x20\x00\x00\x00";	// external file attributes - 'archive' bit set (32)
 	$centralDirectory .= pack('V', $offset);	// relative offset of local header
         $offset += 30 + $filenameLength + $size;
 	$centralDirectory .= $filename;
