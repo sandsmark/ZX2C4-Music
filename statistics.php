@@ -1,4 +1,4 @@
-<?php include_once("authenticate.php"); ?>
+<?php require_once("authenticate.php"); ?>
 <html>
 <head>
 <title><?php echo SITE_NAME; ?> - Statistics</title>
@@ -33,7 +33,7 @@ a
 <h2 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h2>
 <?php
 echo "<h6 align=\"center\" style=\"margin-top: 0px;\">It is now ".date("F j, Y \\a\\t g:i:sa, T").".</h6>";
-include_once("logger.php");
+require_once("logger.php");
 $entries = parseLog();
 foreach($entries as $entry)
 {

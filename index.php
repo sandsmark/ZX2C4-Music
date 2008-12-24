@@ -1,4 +1,4 @@
-<?php include_once("authenticate.php"); ?>
+<?php require_once("authenticate.php"); ?>
 <html>
 <head>
 <title><?php echo SITE_NAME; ?></title>

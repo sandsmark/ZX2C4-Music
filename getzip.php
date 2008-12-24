@@ -1,6 +1,6 @@
 <?php 
-include_once("databaseconnect.php");
-include_once("logger.php");
+require_once("databaseconnect.php");
+require_once("logger.php");
 
 set_time_limit(0);
 

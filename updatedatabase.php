@@ -1,12 +1,12 @@
 <?php
-include_once("databaseconnect.php");
+require_once("databaseconnect.php");
 
 $dbpassword = isset($_POST["dbpassword"]) ? $_POST["dbpassword"] : $_GET["dbpassword"];
 if($dbpassword != DATABASE_PASSWORD)
 {
     $databaseLogin = true;
     header("HTTP/1.1 403 Incorrect Username and/or Password");
-    include("login.php");
+    require_once("login.php");
     exit;
 }
 

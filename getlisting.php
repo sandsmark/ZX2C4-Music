@@ -1,5 +1,5 @@
 <?php
-include_once("databaseconnect.php");
+require_once("databaseconnect.php");
 
 if(!isset($_GET["language"]))
 {

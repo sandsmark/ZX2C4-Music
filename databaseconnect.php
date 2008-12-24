@@ -1,5 +1,5 @@
 <?php
-include_once("authenticate.php");
+require_once("authenticate.php");
 function connectToDatabase()
 {
 	mysql_connect(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD);
