@@ -118,6 +118,10 @@ function processFile($file)
 	$format = nullString($format);
 	$artist = nullString($tags["artist"]);
 	$album = nullString($tags["album"]);
+	if(trim($tags["title"]) == "")
+	{
+		$tags["title"] = basename($file);
+	}
 	$title = nullString($tags["title"]);
 	$year = nullInt((int)$tags["year"]);
 	$comment = nullString($tags["comment"]);
