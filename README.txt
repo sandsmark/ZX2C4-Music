@@ -13,10 +13,10 @@ ZX2C4 Music relies on a small C++ program which uses taglib. Included with this 
 ZX2C4 Music uses ffmpeg for transcoding non-mp3 files to mp3 for the built-in flash music player. If your server does not already have ffmpeg installed and in its PATH, you should install it and add ffmpeg to your server's PATH.
 
 =Installation=
-1. Procure the username, password, server host (which is usually "localhost"), and database name of either an existing database or a new database.
+1. Find the username, password, server host (which is usually "localhost"), and database name of either an existing database or a new database.
 2. Upload music to your server into one directory, and learn the absolute path of that directory. (If you have ssh access, cd into the music directory and type "pwd" (without quotes). This will return the absolute path of the directory.)
-3. Customize settings.php in a text editor, supplying it with the neccessary information. Make sure to read all the comments.
-4. Fill in excludelist.txt with songs you want excluded. At the very least, be sure to remove the sample entries in the exclude list.
+3. Rename settings.php.example to settings.php and customize the file in a text editor, supplying it with the neccessary information. Make sure to read all the comments.
+4. Rename excludelist.txt.example to excludelist.txt and fill in excludelist.txt with paths you want excluded. At the very least, be sure to remove the sample entries in the exclude list. Make sure there are no blank lines in the file.
 5. Upload the directory containing ZX2C4 Music to your server.
 6. Login to ZX2C4 Music using the user password and see that there is no music in the database.
 7. Visit the update database link at the bottom of the page and authenticate using the database password.
