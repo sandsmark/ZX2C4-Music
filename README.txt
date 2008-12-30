@@ -23,3 +23,7 @@ ZX2C4 Music uses ffmpeg for transcoding non-mp3 files to mp3 for the built-in fl
 =URL Tricks=
 *) http://music.zx2c4.com/?query=John+Coltrane will show a search for John Coltrane, after prompting the user for the password
 *) http://music.zx2c4.com/?query=John+Coltrane&username=Apple&password=Sauce will show a search for John Coltrane, after trying to login using username Apple and password Sauce
+
+=Tips=
+I upload my music using rsync over ssh:
+rsync -avz /home/zx2c4/Music/ --delete-excluded --progress --compress-level=9 zx2c4.com:/home/zx2c4com/Personal/Music
