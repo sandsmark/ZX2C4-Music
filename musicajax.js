@@ -53,7 +53,7 @@ function filterResults()
 	lastValue = query;
 	loading.style.visibility = "visible";
 	requestInProgress = true;
-	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=50");
+	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=200");
 	requestObj.onreadystatechange = function() { displayResults(0, lastValue); }
 	requestObj.send(null);
 }
@@ -145,8 +145,8 @@ function watchScroll()
 	{
 		requestInProgress = true;
 		loading.style.visibility = "visible";
-		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=50&offset=" + (completeOffset + 50).toString());
-		requestObj.onreadystatechange = function() { displayResults(completeOffset + 50, trimString(filter.value)); }
+		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=200&offset=" + (completeOffset + 200).toString());
+		requestObj.onreadystatechange = function() { displayResults(completeOffset + 200, trimString(filter.value)); }
 		requestObj.send(null);
 	}
 	setTimeout(arguments.callee, 100);
@@ -220,12 +220,12 @@ function addEntireList()
 	{
 		requestInProgress = true;
 		loading.style.visibility = "visible";
-		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&offset=" + (completeOffset + 50).toString());
+		requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&offset=" + (completeOffset + 200).toString());
 		requestObj.onreadystatechange = function()
 		{
 			if(requestObj.readyState == 4)
 			{
-				displayResults(completeOffset + 50, trimString(filter.value));
+				displayResults(completeOffset + 200, trimString(filter.value));
 				tableComplete = true;
 				addEntireList();
 			}
