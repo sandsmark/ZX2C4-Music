@@ -9,7 +9,7 @@
 <?php } ?>
 <script language="JavaScript" src="musicajax.js"></script>
 </head>
-<body onLoad="initPlayers();">
+<body onLoad="<?php if($_GET["playfirst"] == "true") { echo "playFirst = true;"; } ?>initPlayers();">
 <div id="mainBox">
 
 <div id="header">

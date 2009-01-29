@@ -14,6 +14,7 @@ var downloadBasket = new Array();
 var tableComplete = true;
 var requestInProgress = false;
 var completeOffset;
+var playFirst = false;
 
 if(navigator.appName == "Microsoft Internet Explorer")
 {
@@ -114,6 +115,11 @@ function displayResults(offset, requestedValue)
 					tableData.push("</a>");
 				}
 				tableData.push("</td>");
+				if(playFirst)
+				{
+					playSong(songList[i][0], (songList[i][5] == "mp3"));
+					playFirst = false;
+				}
 			}
 			tableData.push("<td>", getDownloadIcon(songList[i][0], (downloadBasket.indexOf(songList[i][0]) == -1)), "</td></tr>");
 		}
