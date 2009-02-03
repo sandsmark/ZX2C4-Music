@@ -88,6 +88,6 @@ foreach($byIP as $ip => $data)
 	echo "</p>";
 }
 ?>
-<p align="center" style="font-size:8pt">ZX2C4 Music is &copy; Copyright 2008 Jason A. Donenfeld. All Rights Reserved.</p>
+<p align="center" style="font-size:8pt">ZX2C4 Music is &copy; Copyright 2008-2009 Jason A. Donenfeld. All Rights Reserved.</p>
 </body>
 </html>

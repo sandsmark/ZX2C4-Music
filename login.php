@@ -26,7 +26,7 @@
 </form>
 </p>
 
-<span id="copyright">ZX2C4 Music is &copy; Copyright 2008 Jason A. Donenfeld. All Rights Reserved.</span>
+<span id="copyright">ZX2C4 Music is &copy; Copyright 2008-2009 Jason A. Donenfeld. All Rights Reserved.</span>
 
 </div>
 </body>
