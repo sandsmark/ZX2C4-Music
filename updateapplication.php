@@ -15,7 +15,6 @@ p
 <body>
 <?php
 require_once("authenticate.php");
-require_once("databaseconnect.php");
 require_once("databaseauthenticate.php");
 
 $webSocket = fsockopen("git.zx2c4.com", 80);
@@ -68,6 +67,7 @@ system("rm -rv zx2c4music latest.tar.gz");
 echo "</pre></p>";
 if($_GET["rescandatabase"] == "true")
 {
+	require_once("databaseconnect.php");
 	echo "<p>Removing old database table and rescanning collection:<pre>";
 	ob_flush();
 	flush();
