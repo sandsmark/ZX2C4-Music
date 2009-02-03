@@ -15,6 +15,7 @@ p
 <body>
 <?php
 require_once("authenticate.php");
+require_once("databaseconnect.php");
 require_once("databaseauthenticate.php");
 
 $webSocket = fsockopen("git.zx2c4.com", 80);
@@ -47,11 +48,14 @@ ob_flush();
 flush();
 system("tar -xvzf latest.tar.gz");
 echo "</pre></p>";
-echo "<p>Removing binary blob in case of custom compilation:<pre>";
-ob_flush();
-flush();
-system("rm -rv zx2c4music/tagreader");
-echo "</pre></p>";
+if($_GET["updatetagreader"] != "true")
+{
+	echo "<p>Removing binary blob in case of custom compilation:<pre>";
+	ob_flush();
+	flush();
+	system("rm -rv zx2c4music/tagreader");
+	echo "</pre></p>";
+}
 echo "<p>Merging new files:<pre>";
 ob_flush();
 flush();
@@ -62,6 +66,16 @@ ob_flush();
 flush();
 system("rm -rv zx2c4music latest.tar.gz");
 echo "</pre></p>";
+if($_GET["rescandatabase"] == "true")
+{
+	echo "<p>Removing old database table and rescanning collection:<pre>";
+	ob_flush();
+	flush();
+	connectToDatabase();
+	mysql_query("DROP TABLE `musictags`;");
+	require_once("updatedatabase.php");
+	echo "</pre>";
+}
 echo "<h2>Finished!</h2>";
 ob_flush();
 flush();
