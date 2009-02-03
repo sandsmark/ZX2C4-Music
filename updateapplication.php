@@ -45,7 +45,7 @@ echo "</p>";
 echo "<p>Unpacking tarball:<pre>";
 ob_flush();
 flush();
-system("tar xvzf latest.tar.gz");
+system("tar -xvzf latest.tar.gz");
 echo "</pre></p>";
 echo "<p>Removing binary blob in case of custom compilation:<pre>";
 ob_flush();
