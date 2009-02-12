@@ -90,6 +90,6 @@ function getPrettyFilename($row)
 		$filename .= $row["title"];
 	}
 	$filename .= ".".getFileExtension($row["file"]);
-	return $filename;
+	return str_replace("/", "_", $filename);
 }
 ?>
