@@ -17,6 +17,10 @@ echo $failCount." songs failed<br>".$removeCount." songs removed<br>".$updateCou
 function isExcluded($file)
 {
 	global $excludeList;
+	if(!is_array($excludeList) || count($excludeList) == 0)
+	{
+		return false;
+	}
 	foreach($excludeList as $excludedPath)
 	{
 		$excludedPath = joinPaths(MUSIC_DIRECTORY, $excludedPath);
