@@ -38,7 +38,7 @@ if(is_numeric($_GET["offset"]))
 	}
 	$limiter .= " OFFSET ".intval($_GET["offset"]);
 }
-$result = @mysql_query("SELECT SQL_CALC_FOUND_ROWS sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,album,year,disc,track,title ${limiter};");
+$result = @mysql_query("SELECT SQL_CALC_FOUND_ROWS sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,year DESC,album,disc,track,title ${limiter};");
 $totalResult = @mysql_query("SELECT FOUND_ROWS()");
 $totalRows = @mysql_result($totalResult, 0, 0);
 @mysql_free_result($totalResult);
