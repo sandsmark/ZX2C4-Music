@@ -31,7 +31,7 @@ a:hover
 #subheader
 {
 	font-size: 7pt;
-	vertical-align:top;
+	vertical-align: top;
 	font-weight: bold;
 	font-style: italic;
 }
@@ -40,6 +40,7 @@ a:hover
 	font-size: 8pt;
 	width: 100%;
 	border-spacing: 0px;
+	text-align: left;
 }
 #listings
 {

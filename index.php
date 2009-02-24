@@ -1,4 +1,5 @@
 <?php require_once("authenticate.php"); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title><?php echo SITE_NAME; ?></title>
@@ -21,18 +22,14 @@
 <div id="filterBar">Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <img height="16" width="16" src="loading.gif" id="loading"></div>
 <div id="counter"></div>
 <div id="listings"></div>
-<table id="instructions" colspacing="0" colpadding="0" border="0" width="100%"><tr>
+<table id="instructions" cellspacing="0" cellpadding="0" border="0" width="100%"><tr>
 <td align="left"><img src="download.gif" width="10" height="10">=Add to Download Basket<br><img src="remove.gif" width="10" height="10">=Remove from Download Basket</td>
 <td align="center"><span id="flashplayer"></span><iframe id="iframe" frameborder="0" scrolling="no" width="0" height="0"></iframe></td>
 <td align="right"><a href="javascript:addEntireList();">Add Entire List to Download Basket <img border="0" src="download.gif" width="10" height="10"></a></td>
 </tr></table>
-
 <div id="downloads"></div>
-
 <span id="copyright">ZX2C4 Music is &copy; Copyright 2008-2009 Jason A. Donenfeld. All Rights Reserved.</span>
-
 </div>
-
 <p>
 <a href="http://git.zx2c4.com/?p=zx2c4music.git;a=tree">Source Code</a><br>
 <a href="statistics.php">Statistics</a><br>
