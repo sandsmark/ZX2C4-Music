@@ -49,17 +49,18 @@ while($row = mysql_fetch_assoc($ipsResult))
 	echo "<table width=\"100%\" cellspacing=\"0\">";
 	
 	echo "<tr><th colspan=\"6\"><a href=\"http://ws.arin.net/whois?queryinput=".$ip."\">".$ip." (".@gethostbyaddr($ip).")</a></th></tr>";
-	$requestResult = mysql_query("SELECT * FROM requestlog WHERE ip = '$ip' ORDER BY time DESC");
+	$requestResult = mysql_query("SELECT * FROM requestlog WHERE ip = '$ip' AND leaderid = -1 ORDER BY time DESC");
 	while($listen = mysql_fetch_assoc($requestResult))
 	{
-		if($listen["zip"] && $listen["leaderid"] == -1)
+		if($listen["zip"])
 		{
 			echo "<tr><td><font style=\"font-size:6pt;\">".date("M j, Y g:i:sa T", $listen["time"])."</font></td><td colspan=\"4\" align=\"center\"><i>Zip File</i></td><td><font style=\"font-size: 4pt;\">".$listen["useragent"]."</font></td></tr>";
-			$leader = $listen["id"];
-		}
-		elseif($listen["zip"] && $listen["leaderid"] == $leader)
-		{
-			echo "<tr><td class=\"noborder\"></td><td class=\"noborder\">".linkTerm($listen["artist"])."</td><td class=\"noborder\">".linkTerm($listen["album"])."</td><td class=\"noborder\">".linkTerm($listen["title"])."</td><td class=\"noborder\"><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"])."</font></td><td class=\"noborder\"></td></tr>";
+			$subRequestResult = mysql_query("SELECT * FROM requestlog WHERE leaderid = ".$listen["id"]." ORDER BY time DESC");
+			do
+			{
+				echo "<tr><td class=\"noborder\"></td><td class=\"noborder\">".linkTerm($listen["artist"])."</td><td class=\"noborder\">".linkTerm($listen["album"])."</td><td class=\"noborder\">".linkTerm($listen["title"])."</td><td class=\"noborder\"><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"])."</font></td><td class=\"noborder\"></td></tr>";
+			}
+			while($listen = mysql_fetch_assoc($subRequestResult));
 		}
 		else
 		{
