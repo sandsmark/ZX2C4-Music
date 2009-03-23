@@ -1,6 +1,5 @@
 <?php
 require_once("databaseconnect.php");
-setupLogDatabase();
 function setupLogDatabase()
 {
 	mysql_query(	"CREATE TABLE IF NOT EXISTS requestlog (
@@ -22,7 +21,6 @@ function setupLogDatabase()
 }
 function logDownload($songArray, $zip)
 {
-	setupLogDatabase();
 	if(count($songArray) == 0)
 	{
 		return;

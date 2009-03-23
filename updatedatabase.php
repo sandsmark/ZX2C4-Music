@@ -1,6 +1,7 @@
 <?php
 require_once("databaseconnect.php");
 require_once("databaseauthenticate.php");
+require_once("logger.php");
 
 set_time_limit(0);
 
@@ -10,6 +11,7 @@ $updateCount = 0;
 $addCount = 0;
 
 setupDatabase();
+setupLogDatabase();
 deleteBadEntries();
 scanDirectory(MUSIC_DIRECTORY);
 echo $failCount." songs failed<br>".$removeCount." songs removed<br>".$updateCount." songs updated<br>".$addCount." songs added";
