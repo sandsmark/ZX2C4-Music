@@ -71,7 +71,6 @@ if($_GET["rescandatabase"] == "true")
 	echo "<p>Removing old database table and rescanning collection:<pre>";
 	ob_flush();
 	flush();
-	connectToDatabase();
 	mysql_query("DROP TABLE `musictags`;");
 	require_once("updatedatabase.php");
 	echo "</pre>";

@@ -10,13 +10,11 @@ if(!isset($_GET["hash"]))
 	exit;
 }
 
-connectToDatabase();
-
 if(!($row = mysql_fetch_assoc(mysql_query("SELECT file,track,artist,album,title,sha1 FROM musictags WHERE sha1 = ".nullString($_GET["hash"])))))
 {
 	exit;
 }
-logDownload(array($row));
+logDownload(array($row), false);
 if($_GET["transcode"] == true)
 {
 	header('Content-Type: audio/mpeg');

@@ -10,8 +10,6 @@ if($count <= 0)
 	echo "No hashes.";
 	exit;
 }
-
-connectToDatabase();
 $query = "SELECT file,track,artist,album,title,sha1 FROM musictags WHERE ";
 for($i = 0; $i < $_POST["count"]; $i++)
 {
@@ -31,7 +29,7 @@ if(count($rowList) == 0)
 {
 	exit;
 }
-logDownload($rowList);
+logDownload($rowList, true);
 
 if(eregi("MSIE", $_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer", $_SERVER['HTTP_USER_AGENT']))
 {

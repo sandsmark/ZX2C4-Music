@@ -1,10 +1,7 @@
 <?php
 require_once("authenticate.php");
-function connectToDatabase()
-{
-	mysql_connect(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD);
-	mysql_select_db(DATABASE_NAME);
-}
+mysql_connect(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD);
+mysql_select_db(DATABASE_NAME);
 function nullString($string)
 {
 	if($string == "")

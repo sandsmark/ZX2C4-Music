@@ -209,7 +209,6 @@ function joinPaths()
 
 function setupDatabase()
 {
-	connectToDatabase();
 	mysql_query(	"CREATE TABLE IF NOT EXISTS `musictags` (
 			`file` VARCHAR( 255 ) NOT NULL ,
 			`sha1` VARCHAR( 64 ) NOT NULL ,
@@ -236,6 +235,5 @@ function setupDatabase()
 			) ENGINE = MYISAM CHARACTER SET utf8 COMMENT = 'music tag table';"
 	);
 	echo "Connected to database<br>";
-	
 }
 ?>

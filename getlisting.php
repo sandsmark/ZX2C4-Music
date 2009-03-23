@@ -8,8 +8,6 @@ if(!isset($_GET["language"]))
 
 set_time_limit(0);
 
-connectToDatabase();
-
 if($_GET["query"] != "")
 {
 	$words = explode(" ", $_GET["query"]);

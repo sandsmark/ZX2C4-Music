@@ -1,86 +1,51 @@
 <?php
-$logfile = "./download.log";
-function logDownload($songArray)
+require_once("databaseconnect.php");
+setupLogDatabase();
+function setupLogDatabase()
 {
-	$length = count($songArray);
-	if($length == 0)
+	mysql_query(	"CREATE TABLE IF NOT EXISTS requestlog (
+			id INT NOT NULL AUTO_INCREMENT,
+			leaderid INT,
+			PRIMARY KEY(id),
+			time INT NOT NULL,
+			ip VARCHAR(30),
+			useragent VARCHAR(255),
+			zip BOOL,
+			sha1 VARCHAR(64),
+			file VARCHAR(255),
+			track INT,
+			artist VARCHAR(255),
+			album VARCHAR(255),
+			title VARCHAR(255)
+			) CHARACTER SET utf8;"
+	);
+}
+function logDownload($songArray, $zip)
+{
+	setupLogDatabase();
+	if(count($songArray) == 0)
 	{
 		return;
 	}
-	
-	$attributeString = "";
-	foreach($songArray as $attributes)
+	$first = -1;
+	foreach($songArray as $song)
 	{
-		$attributeString .= "song-";
-		foreach($attributes as $key => $value)
+		mysql_query("INSERT INTO requestlog (leaderid, time, ip, useragent, zip, sha1, file, track, artist, album, title) VALUES (
+			".$first.",
+			".time().",
+			".nullString($_SERVER["REMOTE_ADDR"]).",
+			".nullString($_SERVER["HTTP_USER_AGENT"]).",
+			".sqlBool($zip).",
+			".nullString($song["sha1"]).",
+			".nullString($song["file"]).",
+			".nullInt($song["track"]).",
+			".nullString($song["artist"]).",
+			".nullString($song["album"]).",
+			".nullString($song["title"]).");");
+		if($first == -1)
 		{
-			$attributeString .= $key.">".base64_encode($value)."<";
+			$first = mysql_insert_id();
 		}
-		$attributeString .= "|";
 	}
-	
-	global $logfile;
-	$file = fopen($logfile, "a");
-	
-	fwrite($file,
-	"ip-".$_SERVER["REMOTE_ADDR"] ."|".
-	"useragent-".base64_encode($_SERVER["HTTP_USER_AGENT"])."|".
-	"time-".time()."|".
-	"zip-".($length > 1 ? "true" : "false")."|".
-	$attributeString."\n");
-	
-	fclose($file);
-}
-function parseLog()
-{
-	global $logfile;
-	$rawlog = file_get_contents($logfile);
-	$lines = explode("\n",$rawlog);
-	foreach($lines as $line)
-	{
-		if($line == "")
-		{
-			continue;
-		}
-		$mainKeys = explode("|", $line);
-		unset($requestInfo);
-		unset($songInfo);
-		foreach($mainKeys as $key)
-		{
-			$pair = explode("-", $key);
-			if(count($pair) != 2)
-			{
-				continue;
-			}
-			if($pair[0] == "useragent")
-			{
-				$requestInfo[$pair[0]] = base64_decode($pair[1]);
-			}
-			elseif($pair[0] == "song")
-			{
-				$songKeys = explode("<", $pair[1]);
-				foreach($songKeys as $songKey)
-				{
-					$songPair = explode(">", $songKey);
-					if(count($songPair) != 2)
-					{
-						continue;
-					}
-					$songInfo[$songPair[0]] = base64_decode($songPair[1]);
-				}
-				$requestInfo["songs"][] = $songInfo;
-			}
-			elseif($pair[0] == "zip")
-			{
-				$requestInfo[$pair[0]] = ($pair[1] == "true" ? true : false);
-			}
-			else
-			{
-				$requestInfo[$pair[0]] = $pair[1];
-			}
-		}
-		$log[] = $requestInfo;
-	}
-	return $log;
 }
 ?>
