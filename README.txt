@@ -25,6 +25,8 @@ flash music player. If your server does not already have ffmpeg installed and in
 its PATH, you should install it and add ffmpeg to your server's PATH.
 
 =Installation=
+0. Aquire a snapshot of the git archive from
+http://git.zx2c4.com/?p=zx2c4music.git;a=snapshot;h=HEAD;sf=tgz
 1. Find the username, password, server host (which is usually "localhost"), and
 database name of either an existing database or a new database.
 2. Upload music to your server into one directory, and learn the absolute path
