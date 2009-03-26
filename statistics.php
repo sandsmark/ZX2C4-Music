@@ -35,7 +35,8 @@ a
 require_once("logger.php");
 echo 	"<h6 align=\"center\" style=\"margin-top: 0px;\"> Out of a total of ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM musictags;"), 0, 0)." songs available, there have been ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog;"), 0, 0)." total served, ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog;"), 0, 0)." total served (".
+	mysql_result(mysql_query("SELECT COUNT(DISTINCT sha1) FROM requestlog;"), 0, 0)." distinct), ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=0;"), 0, 0)." streamed in the web player, and ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1;"), 0, 0)." downloaded in ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1 AND leaderid=-1;"), 0, 0)." seperate zip files from ".
