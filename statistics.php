@@ -32,8 +32,15 @@ a
 <body>
 <h2 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h2>
 <?php
-echo "<h6 align=\"center\" style=\"margin-top: 0px;\">It is now ".date("F j, Y \\a\\t g:i:sa, T").".</h6>";
 require_once("logger.php");
+echo 	"<h6 align=\"center\" style=\"margin-top: 0px;\"> Out of a total of ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM musictags;"), 0, 0)." songs available, there have been ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog;"), 0, 0)." total served, ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=0;"), 0, 0)." streamed in the web player, and ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1;"), 0, 0)." downloaded in ".
+	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1 AND leaderid=-1;"), 0, 0)." seperate zip files since ".
+	date("F j, Y \\a\\t g:i:sa, T", mysql_result(mysql_query("SELECT MIN(time) FROM requestlog;"), 0, 0)).
+	". It is now ".date("F j, Y \\a\\t g:i:sa, T").".</h6>";
 function linkTerm($term)
 {
 	if($term == "")
