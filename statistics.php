@@ -30,20 +30,29 @@ a
 </style>
 </head>
 <body>
-<h2 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h2>
+<h1 align="center" style="margin-bottom: 0px;">Logs and Statistics<h1>
 <?php
 require_once("logger.php");
-echo 	"<h6 align=\"center\" style=\"margin-top: 0px;\"> Out of a total of ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM musictags;"), 0, 0)." songs available, there have been ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog;"), 0, 0)." total served (".
-	mysql_result(mysql_query("SELECT COUNT(DISTINCT sha1) FROM requestlog;"), 0, 0)." distinct), ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=0;"), 0, 0)." streamed in the web player, and ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1;"), 0, 0)." downloaded in ".
-	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1 AND leaderid=-1;"), 0, 0)." seperate zip files from ".
-	mysql_result(mysql_query("SELECT COUNT(DISTINCT ip) FROM requestlog;"), 0, 0)." different IP addresses and ".
-	mysql_result(mysql_query("SELECT COUNT(DISTINCT useragent) FROM requestlog;"), 0, 0)." different user agents since ".
-	date("F j, Y \\a\\t g:i:sa, T", mysql_result(mysql_query("SELECT MIN(time) FROM requestlog;"), 0, 0)).
-	". It is now ".date("F j, Y \\a\\t g:i:sa, T").".</h6>";
+echo '<h3 align="center" style="margin-bottom: 0px;">Quick Stats</h3><div align="center"><div align="left" style="display:inline-block; font-size: 10pt;">';
+echo "Since ".date("F j, Y \\a\\t g:i:sa, T", mysql_result(mysql_query("SELECT MIN(time) FROM requestlog;"), 0, 0)).":";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(*) FROM musictags;"), 0, 0)." songs available</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog;"), 0, 0)." total songs served</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(DISTINCT sha1) FROM requestlog;"), 0, 0)." different songs served</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=0;"), 0, 0)." songs streamed in the web player</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1;"), 0, 0)." downloaded in zip files</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1 AND leaderid=-1;"), 0, 0)." total zip files downloaded</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(DISTINCT ip) FROM requestlog;"), 0, 0)." different IP addresses</li>";
+echo "<li>".mysql_result(mysql_query("SELECT COUNT(DISTINCT useragent) FROM requestlog;"), 0, 0)." different user agents</li>";
+echo "It is now ".date("F j, Y \\a\\t g:i:sa, T").".</div></div>";
+
+echo '<h3 align="center" style="margin-bottom: 0px;">Most Common User Agents</h3><div align="center"><div align="left" style="display:inline-block; font-size: 10pt;">'; 
+$query = mysql_query("SELECT COUNT(DISTINCT ip), useragent FROM requestlog GROUP BY useragent ORDER BY COUNT(DISTINCT ip) DESC;");
+while($result = mysql_fetch_assoc($query))
+{
+	echo "<li>".$result["COUNT(DISTINCT ip)"].": ".$result["useragent"]."</li>";
+}
+echo "</div></div>";
+echo '<h3 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h3>';
 function linkTerm($term)
 {
 	if($term == "")
@@ -52,14 +61,12 @@ function linkTerm($term)
 	}
 	return "<a href=\"/?query=".urlencode(htmlspecialchars_decode($term))."\">".$term."</a>";
 }
-$ipsResult = mysql_query("SELECT ip, MAX(time) FROM requestlog GROUP BY ip ORDER BY MAX(time) DESC;");
+$ipsResult = mysql_query("SELECT ip, MAX(time), COUNT(*) FROM requestlog GROUP BY ip ORDER BY MAX(time) DESC;");
 while($row = mysql_fetch_assoc($ipsResult))
 {
-	$ip = $row["ip"];
 	echo "<table width=\"100%\" cellspacing=\"0\">";
-	
-	echo "<tr><th colspan=\"6\"><a href=\"http://ws.arin.net/whois?queryinput=".$ip."\">".$ip." (".@gethostbyaddr($ip).")</a></th></tr>";
-	$requestResult = mysql_query("SELECT * FROM requestlog WHERE ip = '$ip' AND leaderid = -1 ORDER BY time DESC");
+	echo "<tr><th colspan=\"6\"><a href=\"http://ws.arin.net/whois?queryinput=".$row["ip"]."\">".$row["ip"]." (".@gethostbyaddr($row["ip"]).")</a> ".$row["COUNT(*)"]." total downloads</th></tr>";
+	$requestResult = mysql_query("SELECT * FROM requestlog WHERE ip = '".$row["ip"]."' AND leaderid = -1 ORDER BY time DESC");
 	while($listen = mysql_fetch_assoc($requestResult))
 	{
 		if($listen["zip"])
