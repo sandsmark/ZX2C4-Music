@@ -40,8 +40,8 @@ echo 	"<h6 align=\"center\" style=\"margin-top: 0px;\"> Out of a total of ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=0;"), 0, 0)." streamed in the web player, and ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1;"), 0, 0)." downloaded in ".
 	mysql_result(mysql_query("SELECT COUNT(*) FROM requestlog WHERE zip=1 AND leaderid=-1;"), 0, 0)." seperate zip files from ".
-	mysql_result(mysql_query("SELECT COUNT(DISTINCT ip) FROM requestlog"), 0, 0)." different IP addresses and ".
-	mysql_result(mysql_query("SELECT COUNT(DISTINCT useragent) FROM requestlog"), 0, 0)." different user agents since ".
+	mysql_result(mysql_query("SELECT COUNT(DISTINCT ip) FROM requestlog;"), 0, 0)." different IP addresses and ".
+	mysql_result(mysql_query("SELECT COUNT(DISTINCT useragent) FROM requestlog;"), 0, 0)." different user agents since ".
 	date("F j, Y \\a\\t g:i:sa, T", mysql_result(mysql_query("SELECT MIN(time) FROM requestlog;"), 0, 0)).
 	". It is now ".date("F j, Y \\a\\t g:i:sa, T").".</h6>";
 function linkTerm($term)
@@ -52,7 +52,7 @@ function linkTerm($term)
 	}
 	return "<a href=\"/?query=".urlencode(htmlspecialchars_decode($term))."\">".$term."</a>";
 }
-$ipsResult = mysql_query("SELECT ip, MAX(time) FROM requestlog GROUP BY ip ORDER BY MAX(time) DESC");
+$ipsResult = mysql_query("SELECT ip, MAX(time) FROM requestlog GROUP BY ip ORDER BY MAX(time) DESC;");
 while($row = mysql_fetch_assoc($ipsResult))
 {
 	$ip = $row["ip"];
