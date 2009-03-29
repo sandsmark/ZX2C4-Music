@@ -45,13 +45,22 @@ echo "<li>".mysql_result(mysql_query("SELECT COUNT(DISTINCT ip) FROM requestlog;
 echo "<li>".mysql_result(mysql_query("SELECT COUNT(DISTINCT useragent) FROM requestlog;"), 0, 0)." different user agents</li>";
 echo "It is now ".date("F j, Y \\a\\t g:i:sa, T").".</div></div>";
 
-echo '<h3 align="center" style="margin-bottom: 0px;">Most Common User Agents</h3><div align="center"><div align="left" style="display:inline-block; font-size: 10pt;">'; 
-$query = mysql_query("SELECT COUNT(DISTINCT ip), useragent FROM requestlog GROUP BY useragent ORDER BY COUNT(DISTINCT ip) DESC;");
+echo '<h3 align="center" style="margin-bottom: 0px;">Top 10 Artists</h3><div align="center"><div align="left" style="display:inline-block; font-size: 10pt;">'; 
+$query = mysql_query("SELECT COUNT(artist), artist FROM requestlog GROUP BY artist ORDER BY COUNT(artist) DESC LIMIT 10;");
+while($result = mysql_fetch_assoc($query))
+{
+	echo "<li>".$result["COUNT(artist)"].": ".$result["artist"]."</li>";
+}
+echo "</div></div>";
+
+echo '<h3 align="center" style="margin-bottom: 0px;">Top 10 User Agents</h3><div align="center"><div align="left" style="display:inline-block; font-size: 10pt;">'; 
+$query = mysql_query("SELECT COUNT(DISTINCT ip), useragent FROM requestlog GROUP BY useragent ORDER BY COUNT(DISTINCT ip) DESC LIMIT 10;");
 while($result = mysql_fetch_assoc($query))
 {
 	echo "<li>".$result["COUNT(DISTINCT ip)"].": ".$result["useragent"]."</li>";
 }
 echo "</div></div>";
+
 echo '<h3 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h3>';
 function linkTerm($term)
 {
