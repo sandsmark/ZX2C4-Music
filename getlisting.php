@@ -11,17 +11,42 @@ set_time_limit(0);
 if($_GET["query"] != "")
 {
 	$words = explode(" ", $_GET["query"]);
-	$conditions = "WHERE (sha1 = ".nullString($_GET["query"]).") OR (";
+	$conditions = "WHERE ";
 	for($i = 0; $i < count($words); $i++)
 	{
 		$word = mysql_real_escape_string($words[$i]);
-		$conditions .= "(artist LIKE '%${word}%' OR title LIKE '%${word}%' OR album LIKE '%${word}%')";
+		if($_GET["querytype"] == "all" || $_GET["querytype"] == "")
+		{
+			$conditions .= "(artist LIKE '%${word}%' OR title LIKE '%${word}%' OR album LIKE '%${word}%' OR sha1='${word}')";
+		}
+		elseif($_GET["querytype"] == "artist")
+		{
+			$conditions .= "(artist LIKE '%${word}%')";
+		}
+		elseif($_GET["querytype"] == "album")
+		{
+			$conditions .= "(album LIKE '%${word}%')";
+		}
+		elseif($_GET["querytype"] == "title")
+		{
+			$conditions .= "(title LIKE '%${word}%')";
+		}
+		elseif($_GET["querytype"] == "sha1")
+		{
+			$conditions .= "(sha1='${word}')";
+		}
 		if($i != count($words) - 1)
 		{
-			$conditions .= " AND ";
+			if($_GET["querytype"] == "sha1")
+			{
+				$conditions .= " OR ";
+			}
+			else
+			{
+				$conditions .= " AND ";
+			}
 		}
 	}
-	$conditions .= ")";
 }
 $limiter = "";
 if(is_numeric($_GET["limit"]))

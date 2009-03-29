@@ -62,13 +62,13 @@ while($result = mysql_fetch_assoc($query))
 echo "</div></div>";
 
 echo '<h3 align="center" style="margin-bottom: 0px;">Requests by IP Address Ordered by Most Recent IP Request</h3>';
-function linkTerm($term)
+function linkTerm($term, $type)
 {
 	if($term == "")
 	{
 		return "&nbsp;";
 	}
-	return "<a href=\"/?query=".urlencode(htmlspecialchars_decode($term))."\">".$term."</a>";
+	return "<a href=\"/?query=".urlencode(htmlspecialchars_decode($term))."&querytype=$type\">".$term."</a>";
 }
 $ipsResult = mysql_query("SELECT ip, MAX(time), COUNT(*) FROM requestlog GROUP BY ip ORDER BY MAX(time) DESC;");
 while($row = mysql_fetch_assoc($ipsResult))
@@ -84,13 +84,13 @@ while($row = mysql_fetch_assoc($ipsResult))
 			$subRequestResult = mysql_query("SELECT * FROM requestlog WHERE leaderid = ".$listen["id"]." ORDER BY time DESC");
 			do
 			{
-				echo "<tr><td class=\"noborder\"></td><td class=\"noborder\">".linkTerm($listen["artist"])."</td><td class=\"noborder\">".linkTerm($listen["album"])."</td><td class=\"noborder\">".linkTerm($listen["title"])."</td><td class=\"noborder\"><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"])."</font></td><td class=\"noborder\"></td></tr>";
+				echo "<tr><td class=\"noborder\"></td><td class=\"noborder\">".linkTerm($listen["artist"], "artist")."</td><td class=\"noborder\">".linkTerm($listen["album"], "album")."</td><td class=\"noborder\">".linkTerm($listen["title"], "title")."</td><td class=\"noborder\"><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"], "sha1")."</font></td><td class=\"noborder\"></td></tr>";
 			}
 			while($listen = mysql_fetch_assoc($subRequestResult));
 		}
 		else
 		{
-			echo "<tr><td><font style=\"font-size:6pt;\">".date("M j, Y g:i:sa T", $listen["time"])."</font></td><td>".linkTerm($listen["artist"])."</td><td>".linkTerm($listen["album"])."</td><td>".linkTerm($listen["title"])."</td><td><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"])."</font></td><td><font style=\"font-size: 4pt;\">".$listen["useragent"]."</font></td></tr>";
+			echo "<tr><td><font style=\"font-size:6pt;\">".date("M j, Y g:i:sa T", $listen["time"])."</font></td><td>".linkTerm($listen["artist"], "artist")."</td><td>".linkTerm($listen["album"], "album")."</td><td>".linkTerm($listen["title"], "title")."</td><td><font style=\"font-size: 4pt;\">".linkTerm($listen["sha1"], "sha1")."</font></td><td><font style=\"font-size: 4pt;\">".$listen["useragent"]."</font></td></tr>";
 		}
 	}
 	echo "</table>";

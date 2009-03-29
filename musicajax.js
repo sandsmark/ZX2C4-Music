@@ -6,6 +6,7 @@ var listings;
 var loading;
 var iframe;
 var filter;
+var filtertype;
 var downloads;
 var downloadsBox;
 var counter;
@@ -41,12 +42,12 @@ function trimString(string)
 function filterResultsTimer()
 {
 	clearTimeout(timerId);
-	timerId = setTimeout("filterResults()", 500);
+	timerId = setTimeout("filterResults(true)", 500);
 }
-function filterResults()
+function filterResults(checkOld)
 {
 	query = trimString(filter.value);
-	if(query == lastValue)
+	if(checkOld && query == lastValue)
 	{
 		return;
 	}
@@ -54,7 +55,7 @@ function filterResults()
 	lastValue = query;
 	loading.style.visibility = "visible";
 	requestInProgress = true;
-	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&limit=200");
+	requestObj.open('GET', "getlisting.php?language=javascript&query=" + query + "&querytype=" + filtertype.value + "&limit=200");
 	requestObj.onreadystatechange = function() { displayResults(0, lastValue); }
 	requestObj.send(null);
 }
@@ -320,8 +321,9 @@ function initPlayers()
 	listings = document.getElementById("listings");
 	loading = document.getElementById("loading");
 	filter = document.getElementById("filter");
+	filtertype = document.getElementById("filtertype");
 	counter = document.getElementById("counter");
 	watchScroll();
-	filterResults();
+	filterResults(false);
 	filter.focus();
 }

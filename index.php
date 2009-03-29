@@ -21,7 +21,18 @@
 
 <!-- <p><b><i>Check out the <a href="desktop">desktop player</a>!</i></b></p> -->
 
-<div id="filterBar">Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <img height="16" width="16" src="loading.gif" id="loading"></div>
+<div id="filterBar">Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <select onChange="filterResults()" id="filtertype"><?php
+$filtertypes = array("all"=>"All", "artist"=>"Artist", "album"=>"Album", "title"=>"Title", "sha1"=>"Hash");
+foreach($filtertypes as $key=>$value)
+{
+	echo "<option value=\"$key\"";
+	if($_GET["querytype"] == $key)
+	{
+		echo " selected";
+	}
+	echo ">$value</option>";
+}
+?></select> <img height="16" width="16" src="loading.gif" id="loading"></div>
 <div id="counter"></div>
 <div id="listings"></div>
 <table id="instructions" cellspacing="0" cellpadding="0" border="0" width="100%"><tr>
