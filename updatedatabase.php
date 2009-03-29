@@ -9,16 +9,18 @@ $failCount = 0;
 $removeCount = 0;
 $updateCount = 0;
 $addCount = 0;
+$excludeCount = 0;
 
 setupDatabase();
 setupLogDatabase();
 deleteBadEntries();
 scanDirectory(MUSIC_DIRECTORY);
-echo $failCount." songs failed<br>".$removeCount." songs removed<br>".$updateCount." songs updated<br>".$addCount." songs added";
+echo $failCount." songs failed<br>".$removeCount." songs removed<br>".$updateCount." songs updated<br>".$addCount." songs added<br>".$excludeCount." songs excluded";
 
 function isExcluded($file)
 {
 	global $excludeList;
+	global $excludeCount;
 	if(!is_array($excludeList) || count($excludeList) == 0)
 	{
 		return false;
@@ -34,6 +36,7 @@ function isExcluded($file)
 		if(!strncmp($excludedPath, $file, $len))
 		{
 			echo "Excluded ".$file."<br>";
+			$excludeCount++;
 			return true;
 		}
 	}
@@ -42,23 +45,18 @@ function isExcluded($file)
 
 function deleteBadEntries()
 {
+	global $removeCount;
 	$result = mysql_query("SELECT file FROM musictags");
 	while($row = mysql_fetch_assoc($result))
 	{
 		if(!file_exists($row["file"]) || isExcluded($row["file"]))
 		{
-			removeEntry($row["file"]);
+			echo "Removed ".$row["file"]."<br>";
+			mysql_query("DELETE FROM musictags WHERE file = ".nullString($row["file"]));
+			$removeCount++;
 		}
 	}
 	mysql_free_result($result);
-}
-
-function removeEntry($file)
-{
-	global $removeCount;
-	echo "Removed ".$file."<br>";
-	mysql_query("DELETE FROM musictags WHERE file = ".nullString($file));
-	$removeCount++;
 }
 
 function processFile($file)
@@ -66,7 +64,6 @@ function processFile($file)
 	global $failCount;
 	global $addCount;
 	global $updateCount;
-	global $removeCount;
 	
 	ob_flush();
 	flush();
@@ -81,6 +78,7 @@ function processFile($file)
 	
 	$nullifiedFile = nullString($file);
 	$lastModified = filemtime($file);
+	$update = false;
 	$result = @mysql_query("SELECT sha1,lastmodified FROM musictags WHERE file = ${nullifiedFile}");
 	if($result)
 	{
@@ -98,10 +96,7 @@ function processFile($file)
 		}
 		elseif($row)
 		{
-			removeEntry($file);
-			$removeCount--;
-			$addCount--;
-			$updateCount++;
+			$update = true;
 		}
 		mysql_free_result($result);
 	}
@@ -137,8 +132,38 @@ function processFile($file)
 	$sampleRate = nullInt((int)$tags["sample rate"]);
 	$channels = nullInt((int)$tags["channels"]);
 	$length = nullInt((int)$tags["length"]);
-
-	mysql_query(	"INSERT INTO `musictags` ( `sha1` , `file` , `lastmodified` , `format` , `artist` , `album` , 
+	
+	if($update)
+	{
+		mysql_query("UPDATE musictags SET 
+			sha1=${sha1},
+			lastmodified=${lastModified},
+			format=${format},
+			artist=${artist},
+			album=${album},
+			albumartist=${albumArtist},
+			title=${title},
+			year=${year},
+			comment=${comment},
+			track=${track},
+			disc=${disc},
+			disctotal=${discTotal},
+			genre=${genre},
+			bpm=${bpm},
+			composer=${composer},
+			compilation=${compilation},
+			bitrate=${bitrate},
+			samplerate=${sampleRate},
+			channels=${channels},
+			length=${length} 
+			WHERE file=${nullifiedFile};"
+		);
+		echo "Updated tags for ".$file."<br>";
+		$updateCount++;
+	}
+	else
+	{
+		mysql_query(	"INSERT INTO `musictags` ( `sha1` , `file` , `lastmodified` , `format` , `artist` , `album` , 
 			`albumartist` , `title` , `year` , `comment` , `track` , `disc` , `disctotal` , 
 			`genre` , `bpm` , `composer` , `compilation` , `bitrate` , `samplerate` , `channels` , `length` )
 			VALUES (
@@ -146,10 +171,11 @@ function processFile($file)
 			${albumArtist}, ${title} , ${year}, ${comment}, ${track}, ${disc}, ${discTotal}, 
 			${genre}, ${bpm}, ${composer}, ${compilation}, ${bitrate}, ${sampleRate}, ${channels}, ${length}
 			);"
-	);
+		);
+		echo "Added ".$file."<br>";
+		$addCount++;
+	}
 	
-	echo "Added ".$file."<br>";
-	$addCount++;
 }
 
 function getTags($file)
