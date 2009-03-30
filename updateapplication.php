@@ -14,34 +14,20 @@ p
 </head>
 <body>
 <?php
+set_time_limit(0);
 require_once("authenticate.php");
 require_once("databaseauthenticate.php");
-
-$webSocket = fsockopen("git.zx2c4.com", 80);
-$fileSocket = fopen("latest.tar.gz", "w");
-fwrite($webSocket, "GET /?p=zx2c4music.git;a=snapshot;h=HEAD;sf=tgz HTTP/0.9\nHost: git.zx2c4.com\n\n");
-$header = true;
 echo "<h2>ZX2C4 Music Updater</h2>";
-echo "<p>Downloading tarball";
-ob_flush();
-flush();
-while($buffer = fread($webSocket, 1024))
+echo "<p>Downloading tarball...";
+if(copy("http://git.zx2c4.com/?p=zx2c4music.git;a=snapshot;h=HEAD;sf=tgz", "latest.tar.gz"))
 {
-	echo " .";
-	ob_flush();
-	flush();
-	if($header)
-	{
-		$start = strpos($buffer, "\r\n\r\n");
-		if($start !== false)
-		{
-			$header = false;
-			$buffer = substr($buffer, $start + 4);
-		}
-	}
-	fwrite($fileSocket, $buffer);
+	echo "done.</p>";
 }
-echo "</p>";
+else
+{
+	echo "error!</p>";
+	exit;
+}
 echo "<p>Unpacking tarball:<pre>";
 ob_flush();
 flush();
