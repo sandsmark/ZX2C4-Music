@@ -19,8 +19,6 @@
 <?php echo SITE_NAME.'<font id="subheader">'.SITE_BETA.'</font>'; ?>
 </div>
 
-<!-- <p><b><i>Check out the <a href="desktop">desktop player</a>!</i></b></p> -->
-
 <div id="filterBar">Filter: <input onFocus="filterResultsTimer()" onSelect="filterResultsTimer()" onChange="filterResultsTimer()" onKeyPress="filterResultsTimer()" id="filter" value="<?php if(isset($_GET["query"])) { echo $_GET["query"]; } else { echo SITE_DEFAULT_SEARCH; } ?>"> <select onChange="filterResults()" id="filtertype"><?php
 $filtertypes = array("all"=>"All", "artist"=>"Artist", "album"=>"Album", "title"=>"Title", "sha1"=>"Hash");
 foreach($filtertypes as $key=>$value)
@@ -43,6 +41,7 @@ foreach($filtertypes as $key=>$value)
 <div id="downloads"></div>
 <span id="copyright">ZX2C4 Music is &copy; Copyright 2008-2009 Jason A. Donenfeld. All Rights Reserved.</span>
 </div>
+<div style="position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 7pt;">This web application is under active development. <a href="mailto:ZX2C4MusicSuggestions@zx2c4.com">Comments? Suggestions? Bugs?</a></div>
 <p>
 <a href="http://git.zx2c4.com/?p=zx2c4music.git;a=tree">Source Code</a><br>
 <a href="statistics.php">Statistics</a><br>
