@@ -75,3 +75,12 @@ a:hover
 {
 	margin-top: 10px;
 }
+#underDevelopment
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	font-size: 7pt;
+}
