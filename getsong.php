@@ -32,7 +32,7 @@ if($_GET["transcode"] == true)
 	{
 		$command .= " -album ".escapeshellarg($row["album"]);
 	}
-	$command .= ' /dev/stdout';
+	$command .= ' -';
 	passthru($command);
 }
 else
