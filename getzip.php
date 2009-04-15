@@ -45,7 +45,6 @@ $centralDirectory = "";
 $offset = 0;
 foreach($rowList as $file)
 {
-	$data = @file_get_contents($file["file"]);
 	$filename = getPrettyFilename($file);
 	echo "\x50\x4b\x03\x04";	// local file header signature
 	echo "\x14\x00";		// version needed to extract
@@ -53,16 +52,15 @@ foreach($rowList as $file)
 	echo "\x00\x00";		// compression method
 	echo "\x00\x00";		// last mod file time
 	echo "\x00\x00";		// last mod file date
-	$crc32 = crc32($data);
-	echo pack('V', $crc32);		// crc-32
-	$size = strlen($data);
+	echo hash_file("crc32b", $file["file"], true); //crc-32
+	$size = filesize($file["file"]);
 	echo pack('V', $size);		// compressed size
 	echo pack('V', $size);		// uncompressed size
 	$filenameLength = strlen($filename);
 	echo pack('v', $filenameLength);// file name length
 	echo "\x00\x00";		// extra field length
 	echo $filename;			// file name
-	echo $data;			// file data
+	readfile($file["file"]);	// file data
 	$centralDirectory .= "\x50\x4b\x01\x02";
 	$centralDirectory .= "\x00\x00";		// version made by
 	$centralDirectory .= "\x14\x00";		// version needed to extract
