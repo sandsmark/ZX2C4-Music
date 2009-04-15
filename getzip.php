@@ -52,7 +52,8 @@ foreach($rowList as $file)
 	echo "\x00\x00";		// compression method
 	echo "\x00\x00";		// last mod file time
 	echo "\x00\x00";		// last mod file date
-	echo hash_file("crc32b", $file["file"], true); //crc-32
+	$crc32 = hash_file("crc32b", $file["file"], true);
+	echo $crc32;			//crc-32
 	$size = filesize($file["file"]);
 	echo pack('V', $size);		// compressed size
 	echo pack('V', $size);		// uncompressed size
@@ -68,7 +69,7 @@ foreach($rowList as $file)
 	$centralDirectory .= "\x00\x00";		// compression method
 	$centralDirectory .= "\x00\x00";		// last mod file time
 	$centralDirectory .= "\x00\x00";		// last mod file date
-	$centralDirectory .= pack('V', $crc32);		// crc-32
+	$centralDirectory .= $crc32;			// crc-32
 	$centralDirectory .= pack('V', $size);		// compressed filesize
 	$centralDirectory .= pack('V', $size);		// uncompressed filesize
 	$centralDirectory .= pack('v', $filenameLength);// length of filename
