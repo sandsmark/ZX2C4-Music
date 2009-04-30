@@ -18,7 +18,8 @@ executable should have executable permissions. If you require compilation on a
 differnt platform, you may download the source at
 http://git.zx2c4.com/?p=taglib-tagreader.git;a=snapshot;h=HEAD;sf=tgz.
 Compilation requires CMake, and the relevant statically linked binary is titled
-"tagreader", which should be moved to the root directory of ZX2C4 Music.
+"tagreader". Build using ./build.sh, and when it completes move
+"build/tagreader" into the root directory of ZX2C4 Music.
 --FFMpeg--
 ZX2C4 Music uses ffmpeg for transcoding non-mp3 files to mp3 for the built-in
 flash music player. If your server does not already have ffmpeg installed and in
