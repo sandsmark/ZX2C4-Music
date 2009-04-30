@@ -16,9 +16,9 @@ ZX2C4 Music relies on a small C++ program which uses taglib. Included with this
 archive is a statically linked Linux ELF executable compiled on i386. This
 executable should have executable permissions. If you require compilation on a
 differnt platform, you may download the source at
-http://music.zx2c4.com/taglib-1.5-modified.tar. Compilation requires CMake, and
-the relevant statically linked binary is titled "tagreader", which should be
-moved to the root directory of ZX2C4 Music.
+http://git.zx2c4.com/?p=taglib-tagreader.git;a=snapshot;h=HEAD;sf=tgz.
+Compilation requires CMake, and the relevant statically linked binary is titled
+"tagreader", which should be moved to the root directory of ZX2C4 Music.
 --FFMpeg--
 ZX2C4 Music uses ffmpeg for transcoding non-mp3 files to mp3 for the built-in
 flash music player. If your server does not already have ffmpeg installed and in
