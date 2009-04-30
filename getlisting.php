@@ -69,16 +69,17 @@ $totalRows = @mysql_result($totalResult, 0, 0);
 $language = strtolower($_GET["language"]);
 if($language == "javascript")
 {
+	header("Content-Type: text/javascript; charset=UTF-8");
 	echo "[$totalRows,[";
 	$first = true;
 	while($row = @mysql_fetch_assoc($result))
 	{
-		$sha1 = htmlentities($row["sha1"]);
-		$track = htmlentities($row["track"]);
-		$title = htmlentities($row["title"]);
-		$artist = htmlentities($row["artist"]);
-		$album = htmlentities($row["album"]);
-		$format = htmlentities($row["format"]);
+		$sha1 = htmlentities($row["sha1"], ENT_QUOTES, "UTF-8");
+		$track = htmlentities($row["track"], ENT_QUOTES, "UTF-8");
+		$title = htmlentities($row["title"], ENT_QUOTES, "UTF-8");
+		$artist = htmlentities($row["artist"], ENT_QUOTES, "UTF-8");
+		$album = htmlentities($row["album"], ENT_QUOTES, "UTF-8");
+		$format = htmlentities($row["format"], ENT_QUOTES, "UTF-8");
 		if(!$first)
 		{
 			echo ",";
@@ -93,8 +94,9 @@ if($language == "javascript")
 }
 elseif($language == "xml")
 {
-	header("Content-Type: text/xml");
+	header("Content-Type: text/xml; charset=UTF-8");
 	$doc = new DOMDocument();
+	$doc->encoding = "UTF-8";
 	$root = $doc->createElement("songs");
 	$root->appendChild(new DOMAttr("totalsongs", $totalRows));
 	$doc->appendChild($root);
@@ -104,7 +106,7 @@ elseif($language == "xml")
 		foreach($row as $key => $value)
 		{
 			$keypair = $doc->createElement($key);
-			$keypair->appendChild($doc->createTextNode(utf8_encode($value)));
+			$keypair->appendChild($doc->createTextNode($value));
 			$song->appendChild($keypair);
 		}
 		$root->appendChild($song);
