@@ -46,6 +46,14 @@ ob_flush();
 flush();
 system("mv -v zx2c4music/* .");
 echo "</pre></p>";
+if($_GET["recompiletagreader"] == "true")
+{
+	echo "<pCompiling tag reader:<pre>";
+	ob_flush();
+	flush();
+	system("./compiletagreader.sh");
+	echo "</pre></p>";
+}
 echo "<p>Cleaning up:<pre>";
 ob_flush();
 flush();
