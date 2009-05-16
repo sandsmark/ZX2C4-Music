@@ -1,9 +1,4 @@
 <?php
-if($_GET["source"] == true)
-{
-	highlight_file(__FILE__);
-	exit;
-}
 require_once("databaseconnect.php");
 function nullEq($str)
 {
