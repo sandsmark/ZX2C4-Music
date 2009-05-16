@@ -49,7 +49,7 @@ if($_GET["getlisting"] == true)
 function addChildren(root, trail, level)
 {
 	var requestObj = new XMLHttpRequest();
-	requestObj.open('GET', "testing.php?getlisting=true" + trail);
+	requestObj.open('GET', "testinterface.php?getlisting=true" + trail);
 	requestObj.level = level;
 	requestObj.trail = trail;
 	requestObj.root = root;
