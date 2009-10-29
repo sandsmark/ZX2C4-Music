@@ -52,7 +52,7 @@ foreach($rowList as $file)
 	echo "\x00\x00";		// compression method
 	echo "\x00\x00";		// last mod file time
 	echo "\x00\x00";		// last mod file date
-	$crc32 = hash_file("crc32b", $file["file"], true);
+	$crc32 = pack('V', crc32(file_get_contents($file["file"])));
 	echo $crc32;			//crc-32
 	$size = filesize($file["file"]);
 	echo pack('V', $size);		// compressed size
