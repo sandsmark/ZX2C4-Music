@@ -40,7 +40,7 @@ foreach($filtertypes as $key=>$value)
 <td align="right"><a href="javascript:addEntireList();">Add Entire List to Download Basket <img border="0" src="download.gif" width="10" height="10"></a></td>
 </tr></table>
 <div id="downloads"></div>
-<span id="copyright">ZX2C4 Music is &copy; Copyright 2008-2009 Jason A. Donenfeld. All Rights Reserved.</span>
+<span id="copyright">ZX2C4 Music is &copy; Copyright 2008-2010 Jason A. Donenfeld. All Rights Reserved.</span>
 </div>
 <div id="underDevelopment">This web application is under active development. <a href="mailto:ZX2C4MusicSuggestions@zx2c4.com">Comments? Suggestions? Bugs?</a></div>
 <p>
