@@ -11,10 +11,10 @@
 <?php if(eregi("MSIE", $_SERVER['HTTP_USER_AGENT']) || eregi("Internet Explorer", $_SERVER['HTTP_USER_AGENT'])) { ?>
 <script language="JavaScript" src="ieadditions.js"></script>
 <?php } ?>
-<?php if($_GET["playfirst"] == "true") { ?>
-<script language="JavaScript">var playFirst = true;</script>
-<?php } ?>
 <script language="JavaScript" src="musicajax.js"></script>
+<?php if($_GET["playfirst"] == "true") { ?>
+<script language="JavaScript">playFirst = true;</script>
+<?php } ?>
 </head>
 <body>
 <div id="mainBox">
