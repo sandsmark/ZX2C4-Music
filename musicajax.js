@@ -11,6 +11,7 @@ var downloads;
 var downloadsBox;
 var counter;
 var songList = null;
+var flashIsDirty = true;
 var downloadBasket = new Array();
 var tableComplete = true;
 var requestInProgress = false;
@@ -82,15 +83,7 @@ function displayResults(offset, requestedValue)
 		{
 			songList = songList.concat(nextBatch[1]);
 		}
-		if(player != null)
-		{
-			var urlList = new Array();
-			for(var i = 0; i < songList.length; i++)
-			{
-				urlList.push("getsong.php?hash=" + songList[i][0] + (songList[i][5] == "mp3" ? "" : "&transcode=true"));
-			}
-			player.load(urlList.join(","), "", "");
-		}
+		flashIsDirty = true;
 		tableComplete = nextBatch[0] <= songList.length;
 		if(songList.length == 0)
 		{
@@ -293,6 +286,16 @@ function playSong(index, hash, mp3)
 		iframe.height = 1;
 		iframe.style.visibility = "hidden";
 		iframe.src = "";
+		if(flashIsDirty)
+		{
+			var urlList = new Array();
+			for(var i = 0; i < songList.length; i++)
+			{
+				urlList.push("getsong.php?hash=" + songList[i][0] + (songList[i][5] == "mp3" ? "" : "&transcode=true"));
+			}
+			player.load(urlList.join(","), "", "");
+			flashIsDirty = false;
+		}
 		player.open(index);
 	}
 	else
