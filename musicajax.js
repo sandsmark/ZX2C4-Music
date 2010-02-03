@@ -293,9 +293,6 @@ function playSong(index, hash, mp3)
 		iframe.height = 1;
 		iframe.style.visibility = "hidden";
 		iframe.src = "";
-		player.width = 290;
-		player.height = 24;
-		player.style.visibility = "visible";
 		player.open(index);
 	}
 	else
@@ -316,8 +313,7 @@ function initPlayers()
 	if(swfobject.hasFlashPlayerVersion("9"))
 	{
 		swfobject.embedSWF("player.swf", "flashplayer", 290, 24, "9", false, { initialvolume: 100 }, { menu: false, wmode: "opaque", allowScriptAccess: "always" }, { style: "outline: none;" });
-		player = swfobject.getObjectById("flashplayer");
-		player.style.visibility = "hidden";
+		player = document.getElementById("flashplayer");
 	}
 	iframe = document.getElementById("iframe");	
 	downloads = document.getElementById("downloads");
