@@ -82,6 +82,15 @@ function displayResults(offset, requestedValue)
 		{
 			songList = songList.concat(nextBatch[1]);
 		}
+		if(player != null)
+		{
+			var urlList = new Array();
+			for(var i = 0; i < songList.length; i++)
+			{
+				urlList.push("getsong.php?hash=" + songList[i][0] + (songList[i][5] == "mp3" ? "" : "&transcode=true"));
+			}
+			player.load(urlList.join(","), "", "");
+		}
 		tableComplete = nextBatch[0] <= songList.length;
 		if(songList.length == 0)
 		{
@@ -108,7 +117,7 @@ function displayResults(offset, requestedValue)
 				tableData.push("<td>");
 				if(j == 2)
 				{
-					tableData.push("<a href=\"javascript:playSong('", songList[i][0], "',", (songList[i][5] == "mp3").toString(), ");\">");
+					tableData.push("<a href=\"javascript:playSong(" + i.toString() + ",'", songList[i][0], "',", (songList[i][5] == "mp3").toString(), ");\">");
 				}
 				tableData.push(songList[i][j]);
 				if(j == 2)
@@ -118,7 +127,7 @@ function displayResults(offset, requestedValue)
 				tableData.push("</td>");
 				if(playFirst)
 				{
-					playSong(songList[i][0], (songList[i][5] == "mp3"));
+					playSong(0, songList[i][0], (songList[i][5] == "mp3"));
 					playFirst = false;
 				}
 			}
@@ -276,7 +285,7 @@ function emptyBasket()
 		removeFromBasket(downloadBasket[0]);
 	}
 }
-function playSong(hash, mp3)
+function playSong(index, hash, mp3)
 {
 	if(player != null)
 	{
@@ -287,11 +296,7 @@ function playSong(hash, mp3)
 		player.width = 290;
 		player.height = 24;
 		player.style.visibility = "visible";
-		player.SetVariable("soundFile", "getsong.php?hash=" + hash + (mp3 ? "" : "&transcode=true"));
-		player.SetVariable("autostart", "yes");
-		player.StopPlay();
-		player.Rewind();
-		player.Play();
+		player.open(index);
 	}
 	else
 	{
@@ -300,20 +305,18 @@ function playSong(hash, mp3)
 			player.width = 1;
 			player.height = 1;
 			player.style.visibility = "hidden";
-			player.SetVariable("closePlayer", 1);
+			player.close();
 		}
 		iframe.src = "getsong.php?hash=" + hash;
-		iframe.width = 290;
-		iframe.height = 20;
 		iframe.style.visibility = "visible";
 	}
 }
 function initPlayers()
 {
-	if(swfobject.hasFlashPlayerVersion("7.0.0"))
+	if(swfobject.hasFlashPlayerVersion("9"))
 	{
-		swfobject.embedSWF("mp3player.swf", "flashplayer", "0", "0", "7.0.0", false, false, false, false);
-		player = document.getElementById("flashplayer");
+		swfobject.embedSWF("player.swf", "flashplayer", 290, 24, "9", false, { initialvolume: 100 }, { menu: false, wmode: "opaque", allowScriptAccess: "always" }, { style: "outline: none;" });
+		player = swfobject.getObjectById("flashplayer");
 		player.style.visibility = "hidden";
 	}
 	iframe = document.getElementById("iframe");	
@@ -327,3 +330,4 @@ function initPlayers()
 	filterResults(false);
 	filter.focus();
 }
+window.onload = initPlayers;
