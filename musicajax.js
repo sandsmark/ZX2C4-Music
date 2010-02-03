@@ -312,7 +312,7 @@ function initPlayers()
 {
 	if(swfobject.hasFlashPlayerVersion("9"))
 	{
-		swfobject.embedSWF("player.swf", "flashplayer", 290, 24, "9", false, { initialvolume: 100 }, { menu: false, wmode: "opaque", allowScriptAccess: "always" }, { style: "outline: none;" });
+		swfobject.embedSWF("player.swf", "flashplayer", 290, 24, "9", false, { soundFile: "http:///,http:///", initialvolume: 100 }, { menu: false, wmode: "opaque", allowScriptAccess: "always" }, { style: "outline: none;" });
 		player = document.getElementById("flashplayer");
 	}
 	iframe = document.getElementById("iframe");	
