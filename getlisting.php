@@ -76,9 +76,9 @@ if($language == "javascript")
 	{
 		$sha1 = htmlentities($row["sha1"], ENT_QUOTES, "UTF-8");
 		$track = htmlentities($row["track"], ENT_QUOTES, "UTF-8");
-		$title = htmlentities($row["title"], ENT_QUOTES, "UTF-8");
-		$artist = htmlentities($row["artist"], ENT_QUOTES, "UTF-8");
-		$album = htmlentities($row["album"], ENT_QUOTES, "UTF-8");
+		$title = htmlentities(utf8_encode($row["title"]), ENT_QUOTES, "UTF-8");
+		$artist = htmlentities(utf8_encode($row["artist"]), ENT_QUOTES, "UTF-8");
+		$album = htmlentities(utf8_encode($row["album"]), ENT_QUOTES, "UTF-8");
 		$format = htmlentities($row["format"], ENT_QUOTES, "UTF-8");
 		if(!$first)
 		{
@@ -106,7 +106,7 @@ elseif($language == "xml")
 		foreach($row as $key => $value)
 		{
 			$keypair = $doc->createElement($key);
-			$keypair->appendChild($doc->createTextNode($value));
+			$keypair->appendChild($doc->createTextNode(utf8_encode($value)));
 			$song->appendChild($keypair);
 		}
 		$root->appendChild($song);

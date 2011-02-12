@@ -31,6 +31,8 @@ if($_GET["getlisting"] == true)
 	header("Content-Type: text/javascript; charset=UTF-8");
 	while($row = @mysql_fetch_row($result))
 	{
+		for ($i = 0; $i < count($row); ++$i)
+			$row[$i] = utf8_encode($row[$i]);
 		$rows[] = $row;
 	}
 	echo json_encode($rows);
