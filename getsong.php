@@ -10,7 +10,7 @@ if(!isset($_GET["hash"]))
 	exit;
 }
 
-if(!($row = mysql_fetch_assoc(mysql_query("SELECT file,track,artist,album,title,sha1 FROM musictags WHERE sha1 = ".nullString($_GET["hash"])))))
+if(!($row = pg_fetch_assoc(pg_query("SELECT file,track,artist,album,title,sha1 FROM musictags WHERE sha1 = ".nullString($_GET["hash"])))))
 {
 	exit;
 }

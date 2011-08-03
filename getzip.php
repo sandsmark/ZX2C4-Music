@@ -19,12 +19,12 @@ for($i = 0; $i < $_POST["count"]; $i++)
 	}
 	$query .= "sha1 = ".nullString($_POST["hash".$i]);
 }
-$query = mysql_query($query);
-while($row = mysql_fetch_assoc($query))
+$query = pg_query($query);
+while($row = pg_fetch_assoc($query))
 {
 	$rowList[] = $row;
 }
-@mysql_free_result($query);
+@pg_free_result($query);
 if(count($rowList) == 0)
 {
 	exit;

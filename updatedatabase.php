@@ -46,17 +46,17 @@ function isExcluded($file)
 function deleteBadEntries()
 {
 	global $removeCount;
-	$result = mysql_query("SELECT file FROM musictags");
-	while($row = mysql_fetch_assoc($result))
+	$result = pg_query("SELECT file FROM musictags");
+	while($row = pg_fetch_assoc($result))
 	{
 		if(!file_exists($row["file"]) || isExcluded($row["file"]))
 		{
 			echo "Removed ".$row["file"]."<br>";
-			mysql_query("DELETE FROM musictags WHERE file = ".nullString($row["file"]));
+			pg_query("DELETE FROM musictags WHERE file = ".nullString($row["file"]));
 			$removeCount++;
 		}
 	}
-	mysql_free_result($result);
+	pg_free_result($result);
 }
 
 function processFile($file)
@@ -79,10 +79,10 @@ function processFile($file)
 	$nullifiedFile = nullString($file);
 	$lastModified = filemtime($file);
 	$update = false;
-	$result = @mysql_query("SELECT sha1,lastmodified FROM musictags WHERE file = ${nullifiedFile}");
+	$result = @pg_query("SELECT sha1,lastmodified FROM musictags WHERE file = ${nullifiedFile}");
 	if($result)
 	{
-		$row = mysql_fetch_assoc($result);		
+		$row = pg_fetch_assoc($result);		
 		if($lastModified == $row["lastmodified"])
 		{
 			return;
@@ -90,7 +90,7 @@ function processFile($file)
 		elseif(($sha1 = sha1_file($file)) == $row["sha1"])
 		{
 			echo "Updated last modified for ".$file."<br>";
-			mysql_query("UPDATE musictags SET lastmodified = ${lastModified} WHERE file = ${nullifiedFile}");
+			pg_query("UPDATE musictags SET lastmodified = ${lastModified} WHERE file = ${nullifiedFile}");
 			$updateCount++;
 			return;
 		}
@@ -98,7 +98,7 @@ function processFile($file)
 		{
 			$update = true;
 		}
-		mysql_free_result($result);
+		pg_free_result($result);
 	}
 	
 	$tags = getTags($file);
@@ -135,7 +135,7 @@ function processFile($file)
 	
 	if($update)
 	{
-		mysql_query("UPDATE musictags SET 
+		pg_query("UPDATE musictags SET 
 			sha1=${sha1},
 			lastmodified=${lastModified},
 			format=${format},
@@ -163,9 +163,9 @@ function processFile($file)
 	}
 	else
 	{
-		mysql_query(	"INSERT INTO `musictags` ( `sha1` , `file` , `lastmodified` , `format` , `artist` , `album` , 
-			`albumartist` , `title` , `year` , `comment` , `track` , `disc` , `disctotal` , 
-			`genre` , `bpm` , `composer` , `compilation` , `bitrate` , `samplerate` , `channels` , `length` )
+		pg_query(	"INSERT INTO musictags ( sha1 , file , lastmodified , format , artist , album , 
+			albumartist , title , year , comment , track , disc , disctotal , 
+			genre , bpm , composer , compilation , bitrate , samplerate , channels , length )
 			VALUES (
 			${sha1}, ${nullifiedFile}, ${lastModified}, ${format}, ${artist}, ${album}, 
 			${albumArtist}, ${title} , ${year}, ${comment}, ${track}, ${disc}, ${discTotal}, 
@@ -237,30 +237,30 @@ function joinPaths()
 
 function setupDatabase()
 {
-	mysql_query(	"CREATE TABLE IF NOT EXISTS `musictags` (
-			`file` VARCHAR( 255 ) NOT NULL ,
-			`sha1` VARCHAR( 64 ) NOT NULL ,
-			`lastmodified` INT NOT NULL ,
-			`format` VARCHAR( 255 ) NULL ,
-			`artist` VARCHAR( 255 ) NULL ,
-			`album` VARCHAR( 255 ) NULL ,
-			`albumartist` VARCHAR( 255 ) NULL ,
-			`title` VARCHAR( 255 ) NULL ,
-			`year` INT NULL ,
-			`comment` VARCHAR( 255 ) NULL ,
-			`track` INT NULL ,
-			`disc` INT NULL ,
-			`disctotal` INT NULL ,
-			`genre` VARCHAR( 255 ) NULL ,
-			`bpm` INT NULL ,
-			`composer` VARCHAR( 255 ) NULL ,
-			`compilation` BOOL NULL ,
-			`bitrate` INT NULL ,
-			`samplerate` INT NULL ,
-			`channels` INT NULL ,
-			`length` INT NULL ,
-			PRIMARY KEY ( `file` )
-			) ENGINE = MYISAM CHARACTER SET utf8 COMMENT = 'music tag table';"
+	pg_query(	"CREATE TABLE musictags (
+			file VARCHAR NOT NULL ,
+			sha1 VARCHAR( 64 ) NOT NULL ,
+			lastmodified INT NOT NULL ,
+			format VARCHAR NULL ,
+			artist VARCHAR NULL ,
+			album VARCHAR NULL ,
+			albumartist VARCHAR NULL ,
+			title VARCHAR NULL ,
+			year INT NULL ,
+			comment VARCHAR NULL ,
+			track INT NULL ,
+			disc INT NULL ,
+			disctotal INT NULL ,
+			genre VARCHAR NULL ,
+			bpm INT NULL ,
+			composer VARCHAR NULL ,
+			compilation BOOL NULL ,
+			bitrate INT NULL ,
+			samplerate INT NULL ,
+			channels INT NULL ,
+			length INT NULL ,
+			PRIMARY KEY ( file )
+			);"
 	);
 	echo "Connected to database<br>";
 }

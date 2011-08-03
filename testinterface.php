@@ -8,7 +8,7 @@ function nullEq($str)
 	}
 	else
 	{
-		return "= '".mysql_real_escape_string($str)."'";
+		return "= '".pg_escape_string($str)."'";
 	}
 }
 if($_GET["getlisting"] == true)
@@ -17,19 +17,19 @@ if($_GET["getlisting"] == true)
 	{
 		$artist = nullEq($_GET["artist"]);
 		$album = nullEq($_GET["album"]);
-		$result = @mysql_query("SELECT title, sha1 FROM musictags WHERE artist $artist AND album $album ORDER BY disc, track, title");
+		$result = @pg_query("SELECT title, sha1 FROM musictags WHERE artist $artist AND album $album ORDER BY disc, track, title");
 	}
 	elseif(isset($_GET["artist"]))
 	{
 		$artist = nullEq($_GET["artist"]);
-		$result = @mysql_query("SELECT DISTINCT album FROM musictags WHERE artist $artist ORDER BY year, album");
+		$result = @pg_query("SELECT DISTINCT album FROM musictags WHERE artist $artist ORDER BY year, album");
 	}
 	else
 	{
-		$result = @mysql_query("SELECT DISTINCT artist FROM musictags ORDER BY artist;");
+		$result = @pg_query("SELECT DISTINCT artist FROM musictags ORDER BY artist;");
 	}
 	header("Content-Type: text/javascript; charset=UTF-8");
-	while($row = @mysql_fetch_row($result))
+	while($row = @pg_fetch_row($result))
 	{
 		for ($i = 0; $i < count($row); ++$i)
 			$row[$i] = utf8_encode($row[$i]);

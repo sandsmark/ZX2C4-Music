@@ -1,14 +1,13 @@
 <?php
 require_once("authenticate.php");
-mysql_connect(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD);
-mysql_select_db(DATABASE_NAME);
+pg_connect("host=".DATABASE_SERVER." user=".DATABASE_USERNAME." password=".DATABASE_PASSWORD." dbname=".DATABASE_NAME);
 function nullString($string)
 {
 	if($string == "")
 	{
 		return "NULL";
 	}
-	return "'".mysql_real_escape_string($string)."'";
+	return "'".pg_escape_string($string)."'";
 }
 function nullInt($int)
 {
@@ -20,7 +19,7 @@ function nullInt($int)
 }
 function sqlBool($bool)
 {
-	return $bool ? "1" : "0";
+	return $bool ? "TRUE" : "FALSE";
 }
 function getFormat($file)
 {

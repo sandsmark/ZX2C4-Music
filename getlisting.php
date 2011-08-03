@@ -14,7 +14,7 @@ if($_GET["query"] != "")
 	$conditions = "WHERE ";
 	for($i = 0; $i < count($words); $i++)
 	{
-		$word = mysql_real_escape_string($words[$i]);
+		$word = pg_escape_string($words[$i]);
 		if($_GET["querytype"] == "all" || $_GET["querytype"] == "")
 		{
 			$conditions .= "(artist LIKE '%${word}%' OR title LIKE '%${word}%' OR album LIKE '%${word}%' OR sha1='${word}')";
@@ -61,10 +61,10 @@ if(is_numeric($_GET["offset"]))
 	}
 	$limiter .= " OFFSET ".intval($_GET["offset"]);
 }
-$result = @mysql_query("SELECT SQL_CALC_FOUND_ROWS sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,year,album,disc,track,title ${limiter};");
-$totalResult = @mysql_query("SELECT FOUND_ROWS()");
-$totalRows = @mysql_result($totalResult, 0, 0);
-@mysql_free_result($totalResult);
+$result = @pg_query("SELECT sha1,track,title,artist,album,format FROM musictags ${conditions} ORDER BY artist,year,album,disc,track,title ${limiter};");
+$totalResult = @pg_query("SELECT count(*) from musictags ${conditions} ${limiter}");
+$totalRows = @pg_result($totalResult, 0, 0);
+@pg_free_result($totalResult);
 
 $language = strtolower($_GET["language"]);
 if($language == "javascript")
@@ -72,7 +72,7 @@ if($language == "javascript")
 	header("Content-Type: text/javascript; charset=UTF-8");
 	echo "[$totalRows,[";
 	$first = true;
-	while($row = @mysql_fetch_assoc($result))
+	while($row = @pg_fetch_assoc($result))
 	{
 		$sha1 = htmlentities($row["sha1"], ENT_QUOTES, "UTF-8");
 		$track = htmlentities($row["track"], ENT_QUOTES, "UTF-8");
@@ -100,7 +100,7 @@ elseif($language == "xml")
 	$root = $doc->createElement("songs");
 	$root->appendChild(new DOMAttr("totalsongs", $totalRows));
 	$doc->appendChild($root);
-	while($row = @mysql_fetch_assoc($result))
+	while($row = @pg_fetch_assoc($result))
 	{
 		$song = $doc->createElement("song");
 		foreach($row as $key => $value)
@@ -124,5 +124,5 @@ elseif($language == "xml")
 	}
 	echo $output;
 }
-@mysql_free_result($result);
+@pg_free_result($result);
 ?>

@@ -2,19 +2,19 @@
 require_once("databaseconnect.php");
 function setupLogDatabase()
 {
-	mysql_query(	"CREATE TABLE IF NOT EXISTS requestlog (
-			id INT NOT NULL AUTO_INCREMENT,
+	pg_query(	"CREATE TABLE requestlog (
+			id SERIAL,
 			PRIMARY KEY(id),
 			leaderid INT,
 			time INT NOT NULL,
 			ip VARCHAR(30),
-			useragent VARCHAR(255),
+			useragent VARCHAR,
 			zip BOOL,
 			sha1 VARCHAR(64),
-			artist VARCHAR(255),
-			album VARCHAR(255),
-			title VARCHAR(255)
-			) CHARACTER SET utf8;"
+			artist VARCHAR,
+			album VARCHAR,
+			title VARCHAR
+			);"
 	);
 }
 function logDownload($songArray, $zip)
@@ -26,7 +26,7 @@ function logDownload($songArray, $zip)
 	$first = -1;
 	foreach($songArray as $song)
 	{
-		mysql_query("INSERT INTO requestlog (leaderid, time, ip, useragent, zip, sha1, artist, album, title) VALUES (
+		$result = pg_query("INSERT INTO requestlog (leaderid, time, ip, useragent, zip, sha1, artist, album, title) VALUES (
 			".$first.",
 			".time().",
 			".nullString($_SERVER["REMOTE_ADDR"]).",
@@ -35,11 +35,12 @@ function logDownload($songArray, $zip)
 			".nullString($song["sha1"]).",
 			".nullString($song["artist"]).",
 			".nullString($song["album"]).",
-			".nullString($song["title"]).");
-		");
+			".nullString($song["title"]).")
+		 RETURNING id;");
 		if($first == -1)
 		{
-			$first = mysql_insert_id();
+            $row = pg_fetch_row($result);
+			$first = $row[0];
 		}
 	}
 }
